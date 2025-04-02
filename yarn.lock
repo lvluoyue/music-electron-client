@@ -689,7 +689,21 @@
   resolved "https://registry.npmmirror.com/@humanwhocodes/retry/-/retry-0.4.2.tgz#1860473de7dfa1546767448f333db80cb0ff2161"
   integrity sha512-xeO57FpIu4p1Ri3Jq/EXq4ClRm86dVF2z/+kvFnyqVYRavTZmaFaUBbWCOuuTh0o/g7DSsk6kc2vrS4Vl5oPOQ==
 
-"@iconify/types@^2.0.0":
+"@iconify-json/ep@^1.2.2":
+  version "1.2.2"
+  resolved "https://registry.npmmirror.com/@iconify-json/ep/-/ep-1.2.2.tgz#87d9465b336aadf7e5f6f890a25124b1cbaba2af"
+  integrity sha512-/IH1GjQKH5uK7lQAOjwPxdjkU98OWUWnHYCdg/EkeebBKEteotaOMeEz5pR1egqMcI7zPFdFBTcGyCHla1ddQw==
+  dependencies:
+    "@iconify/types" "*"
+
+"@iconify-json/qlementine-icons@^1.2.5":
+  version "1.2.5"
+  resolved "https://registry.npmmirror.com/@iconify-json/qlementine-icons/-/qlementine-icons-1.2.5.tgz#92e2e7bef5d1980a4377aa596212d9ff746c687e"
+  integrity sha512-hAIzdGcSgbRWgVwVWHwoOXns6Hrl3S81esm7TjqWM0iLGqvreB+L+lCMuCfbAaiq6009UtV9nVta4AOiOe9LFQ==
+  dependencies:
+    "@iconify/types" "*"
+
+"@iconify/types@*", "@iconify/types@^2.0.0":
   version "2.0.0"
   resolved "https://registry.npmmirror.com/@iconify/types/-/types-2.0.0.tgz#ab0e9ea681d6c8a1214f30cd741fe3a20cc57f57"
   integrity sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==
@@ -1181,6 +1195,11 @@
   resolved "https://registry.npmmirror.com/@types/web-bluetooth/-/web-bluetooth-0.0.16.tgz#1d12873a8e49567371f2a75fe3e7f7edca6662d8"
   integrity sha512-oh8q2Zc32S6gd/j50GowEjKLoOVOwHP/bWVjKJInBwQqdOYMdPrf1oVlelTlyfFK3CKxL1uahMDAr+vy8T7yMQ==
 
+"@types/web-bluetooth@^0.0.21":
+  version "0.0.21"
+  resolved "https://registry.npmmirror.com/@types/web-bluetooth/-/web-bluetooth-0.0.21.tgz#525433c784aed9b457aaa0ee3d92aeb71f346b63"
+  integrity sha512-oIQLCGWtcFZy2JW77j9k8nHzAOpqMHLQejDA48XXMWH6tjCQHz5RCFz1bzsmROyL6PUm+LLnUiI4BCn221inxA==
+
 "@types/yauzl@^2.9.1":
   version "2.10.3"
   resolved "https://registry.npmmirror.com/@types/yauzl/-/yauzl-2.10.3.tgz#e9b2808b4f109504a03cda958259876f61017999"
@@ -1348,7 +1367,7 @@
   dependencies:
     "@unocss/core" "66.1.0-beta.8"
 
-"@unocss/preset-icons@66.1.0-beta.8":
+"@unocss/preset-icons@66.1.0-beta.8", "@unocss/preset-icons@^66.1.0-beta.8":
   version "66.1.0-beta.8"
   resolved "https://registry.npmmirror.com/@unocss/preset-icons/-/preset-icons-66.1.0-beta.8.tgz#446bc4da3aa02aeacdb4eb1448ff15cb03ddb311"
   integrity sha512-5rnu8/DoVG4NEfIeEHHBNdxKiMS8SazKJczIZoxKatqoJ6Woexv2xCyqW6dLCTkhHAi6g9GrbjNMVDX3U9Fxfw==
@@ -1693,6 +1712,23 @@
   resolved "https://registry.npmmirror.com/@vue/shared/-/shared-3.5.13.tgz#87b309a6379c22b926e696893237826f64339b6f"
   integrity sha512-/hnE/qP5ZoGpol0a5mDi45bOd7t3tjYJBjsgCsivow7D48cJeV5l05RD82lPqi7gRiphZM37rnhW1l6ZoCNNnQ==
 
+"@vueuse/components@^13.0.0":
+  version "13.0.0"
+  resolved "https://registry.npmmirror.com/@vueuse/components/-/components-13.0.0.tgz#ed48ecccb8ed8f23f5c3260011ae4e76fab13c04"
+  integrity sha512-rcGp3c5Yu4SVLGUhBXT0q227nduFx1HTKzJBQkPLpIhwG1SB8RZ5bbri9sbusGaFZB5CYc6jza5+gfSJ7YidIg==
+  dependencies:
+    "@vueuse/core" "13.0.0"
+    "@vueuse/shared" "13.0.0"
+
+"@vueuse/core@13.0.0", "@vueuse/core@^13.0.0":
+  version "13.0.0"
+  resolved "https://registry.npmmirror.com/@vueuse/core/-/core-13.0.0.tgz#60bf419e3f9fb003b51f1dfed550afffdb1691ff"
+  integrity sha512-rkgb4a8/0b234lMGCT29WkCjPfsX0oxrIRR7FDndRoW3FsaC9NBzefXg/9TLhAgwM11f49XnutshM4LzJBrQ5g==
+  dependencies:
+    "@types/web-bluetooth" "^0.0.21"
+    "@vueuse/metadata" "13.0.0"
+    "@vueuse/shared" "13.0.0"
+
 "@vueuse/core@^9.1.0":
   version "9.13.0"
   resolved "https://registry.npmmirror.com/@vueuse/core/-/core-9.13.0.tgz#2f69e66d1905c1e4eebc249a01759cf88ea00cf4"
@@ -1703,10 +1739,27 @@
     "@vueuse/shared" "9.13.0"
     vue-demi "*"
 
+"@vueuse/electron@^13.0.0":
+  version "13.0.0"
+  resolved "https://registry.npmmirror.com/@vueuse/electron/-/electron-13.0.0.tgz#e4da7ccb4aeb5e1e7b0781e44345cdf880b6ac11"
+  integrity sha512-dyMRGDCE68BVCIe0Brl+3C+wHvG9/KjXbir/dq3B2AJNBa6hTZaB1LUTXUP6FsUZnWPn8NMkIdxTQt85+WLz+A==
+  dependencies:
+    "@vueuse/shared" "13.0.0"
+
+"@vueuse/metadata@13.0.0":
+  version "13.0.0"
+  resolved "https://registry.npmmirror.com/@vueuse/metadata/-/metadata-13.0.0.tgz#f9c70e1d4958869693e6dcf385d3294cdd304b58"
+  integrity sha512-TRNksqmvtvqsuHf7bbgH9OSXEV2b6+M3BSN4LR5oxWKykOFT9gV78+C2/0++Pq9KCp9KQ1OQDPvGlWNQpOb2Mw==
+
 "@vueuse/metadata@9.13.0":
   version "9.13.0"
   resolved "https://registry.npmmirror.com/@vueuse/metadata/-/metadata-9.13.0.tgz#bc25a6cdad1b1a93c36ce30191124da6520539ff"
   integrity sha512-gdU7TKNAUVlXXLbaF+ZCfte8BjRJQWPCa2J55+7/h+yDtzw3vOoGQDRXzI6pyKyo6bXFT5/QoPE4hAknExjRLQ==
+
+"@vueuse/shared@13.0.0":
+  version "13.0.0"
+  resolved "https://registry.npmmirror.com/@vueuse/shared/-/shared-13.0.0.tgz#4bc454ac359303904d4cf9b23e0dd265be90bf2d"
+  integrity sha512-9MiHhAPw+sqCF/RLo8V6HsjRqEdNEWVpDLm2WBRW2G/kSQjb8X901sozXpSCaeLG0f7TEfMrT4XNaA5m1ez7Dg==
 
 "@vueuse/shared@9.13.0":
   version "9.13.0"
@@ -1907,6 +1960,15 @@ at-least-node@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmmirror.com/at-least-node/-/at-least-node-1.0.0.tgz#602cd4b46e844ad4effc92a8011a3c46e0238dc2"
   integrity sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==
+
+axios@^1.8.4:
+  version "1.8.4"
+  resolved "https://registry.npmmirror.com/axios/-/axios-1.8.4.tgz#78990bb4bc63d2cae072952d374835950a82f447"
+  integrity sha512-eBSYY4Y68NNlHbHBMdeDmKNtDgXWhQsJcGqzO3iLUM0GraQFSS9cVgPX5I9b3lbdFKyYoAEGAZF1DwhTaljNAw==
+  dependencies:
+    follow-redirects "^1.15.6"
+    form-data "^4.0.0"
+    proxy-from-env "^1.1.0"
 
 balanced-match@^1.0.0:
   version "1.0.2"
@@ -3055,6 +3117,11 @@ flatted@^3.2.9:
   version "3.3.3"
   resolved "https://registry.npmmirror.com/flatted/-/flatted-3.3.3.tgz#67c8fad95454a7c7abebf74bb78ee74a44023358"
   integrity sha512-GX+ysw4PBCz0PzosHDepZGANEuFCMLrnRTiEy9McGjmkCQYwRq4A/X786G/fjM/+OjsWSU1ZrY5qyARZmO/uwg==
+
+follow-redirects@^1.15.6:
+  version "1.15.9"
+  resolved "https://registry.npmmirror.com/follow-redirects/-/follow-redirects-1.15.9.tgz#a604fa10e443bf98ca94228d9eebcc2e8a2c8ee1"
+  integrity sha512-gew4GsXizNgdoRyqmyfMHyAmXsZDk6mHkSxZFCzW9gwlbtOW44CDtYavM+y+72qD/Vq2l550kMF52DT8fOLJqQ==
 
 foreground-child@^3.1.0:
   version "3.3.1"
@@ -4587,6 +4654,11 @@ promise-retry@^2.0.1:
     err-code "^2.0.2"
     retry "^0.12.0"
 
+proxy-from-env@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npmmirror.com/proxy-from-env/-/proxy-from-env-1.1.0.tgz#e102f16ca355424865755d2c9e8ea4f24d58c3e2"
+  integrity sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==
+
 pump@^3.0.0:
   version "3.0.2"
   resolved "https://registry.npmmirror.com/pump/-/pump-3.0.2.tgz#836f3edd6bc2ee599256c924ffe0d88573ddcbf8"
@@ -5457,17 +5529,6 @@ unplugin-auto-import@^19.1.2:
     unimport "^4.1.2"
     unplugin "^2.2.2"
     unplugin-utils "^0.2.4"
-
-unplugin-icons@^22.1.0:
-  version "22.1.0"
-  resolved "https://registry.npmmirror.com/unplugin-icons/-/unplugin-icons-22.1.0.tgz#5a6fe3d751e50f1c937e289857b0418e6855d92a"
-  integrity sha512-ect2ZNtk1Zgwb0NVHd0C1IDW/MV+Jk/xaq4t8o6rYdVS3+L660ZdD5kTSQZvsgdwCvquRw+/wYn75hsweRjoIA==
-  dependencies:
-    "@antfu/install-pkg" "^1.0.0"
-    "@iconify/utils" "^2.3.0"
-    debug "^4.4.0"
-    local-pkg "^1.0.0"
-    unplugin "^2.2.0"
 
 unplugin-utils@^0.2.4:
   version "0.2.4"

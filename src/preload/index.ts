@@ -1,8 +1,15 @@
 import { contextBridge } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
+import { useIpcRenderer } from '@vueuse/electron'
+
+const { send } = useIpcRenderer()
 
 // Custom APIs for renderer
-const api = {}
+const api = {
+  windowMin: (): void => send('window-min'),
+  windowMax: (): void => send('window-max'),
+  windowClose: (): void => send('window-close')
+}
 
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise

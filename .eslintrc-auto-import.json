@@ -295,6 +295,23 @@
     "watchThrottled": true,
     "watchTriggerable": true,
     "watchWithFilter": true,
-    "whenever": true
+    "whenever": true,
+    "createRef": true,
+    "createReusableTemplate": true,
+    "createTemplatePromise": true,
+    "injectLocal": true,
+    "onElementRemoval": true,
+    "provideLocal": true,
+    "useAnimate": true,
+    "useArrayDifference": true,
+    "useArrayIncludes": true,
+    "useClipboardItems": true,
+    "useCountdown": true,
+    "useParentElement": true,
+    "usePerformanceObserver": true,
+    "usePreferredReducedTransparency": true,
+    "useSSRWidth": true,
+    "watchDeep": true,
+    "watchImmediate": true
   }
 }

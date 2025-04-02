@@ -1,18 +1,22 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import { join } from 'path'
-import { electronApp, optimizer, is } from '@electron-toolkit/utils'
+import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 670,
+    width: 1100,
+    height: 700,
+    minWidth: 1100,
+    minHeight: 700,
     show: false,
+    frame: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
+      nodeIntegration: true, // 允许使用 Node.js API
       sandbox: false
     }
   })
@@ -24,6 +28,24 @@ function createWindow(): void {
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
     return { action: 'deny' }
+  })
+
+  ipcMain.on('window-min', function () {
+    mainWindow.minimize()
+  })
+
+  //接收最大化命令
+  ipcMain.on('window-max', function () {
+    if (mainWindow.isMaximized()) {
+      mainWindow.restore()
+    } else {
+      mainWindow.maximize()
+    }
+  })
+
+  //接收关闭命令
+  ipcMain.on('window-close', function () {
+    mainWindow.close()
   })
 
   // HMR for renderer base on electron-vite cli.

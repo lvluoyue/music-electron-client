@@ -55,7 +55,6 @@
 <script setup lang="ts">
 import { EplorRenderer, LyricLine, LyricLineMouseEvent } from '@applemusic-like-lyrics/core'
 import { parseLrc } from '@applemusic-like-lyrics/lyric'
-import { onMounted, reactive, ref } from 'vue'
 import {
   LyricPlayer,
   BackgroundRender,

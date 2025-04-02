@@ -1,6 +1,10 @@
 import tseslint from '@electron-toolkit/eslint-config-ts'
 import eslintConfigPrettier from '@electron-toolkit/eslint-config-prettier'
 import eslintPluginVue from 'eslint-plugin-vue'
+import { readFile } from 'node:fs/promises'
+
+const autoImportFile = new URL('./.eslintrc-auto-import.json', import.meta.url)
+const autoImportGlobals = JSON.parse(await readFile(autoImportFile, 'utf8'))
 
 export default tseslint.config(
   { ignores: ['**/node_modules', '**/dist', '**/out'] },
@@ -11,6 +15,9 @@ export default tseslint.config(
     languageOptions: {
       parserOptions: {
         parser: tseslint.parser
+      },
+      globals: {
+        ...autoImportGlobals.globals
       }
     }
   },

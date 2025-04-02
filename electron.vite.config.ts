@@ -7,15 +7,36 @@ import UnoCSS from 'unocss/vite'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
-import IconsResolver from 'unplugin-icons/resolver'
+import {
+  ElementPlusResolver,
+  VueUseComponentsResolver,
+  VueUseDirectiveResolver
+} from 'unplugin-vue-components/resolvers'
 
 export default defineConfig({
   main: {
     plugins: [externalizeDepsPlugin()]
   },
   preload: {
-    plugins: [externalizeDepsPlugin()]
+    plugins: [
+      externalizeDepsPlugin(),
+      AutoImport({
+        imports: ['vue', '@vueuse/core', 'vue-router', 'pinia'],
+        resolvers: [ElementPlusResolver(), VueUseComponentsResolver(), VueUseDirectiveResolver()],
+        eslintrc: {
+          enabled: true
+        },
+        dts: 'src/types/auto-imports.d.ts'
+      }),
+      Components({
+        resolvers: [ElementPlusResolver(), VueUseComponentsResolver(), VueUseDirectiveResolver()],
+        // 指定自定义组件位置(默认:src/components)
+        dirs: ['src/components', 'src/**/components'],
+        // 指定自动导入组件TS类型声明文件路径 (false:关闭自动生成)
+        // dts: false,
+        dts: 'src/types/components.d.ts'
+      })
+    ]
   },
   renderer: {
     resolve: {
@@ -36,26 +57,14 @@ export default defineConfig({
       UnoCSS(),
       AutoImport({
         imports: ['vue', '@vueuse/core', 'vue-router', 'pinia'],
-        resolvers: [
-          ElementPlusResolver(),
-          // 自动导入图标组件
-          IconsResolver({
-            prefix: 'Icon'
-          })
-        ],
+        resolvers: [ElementPlusResolver(), VueUseComponentsResolver(), VueUseDirectiveResolver()],
         eslintrc: {
           enabled: true
         },
         dts: 'src/types/auto-imports.d.ts'
       }),
       Components({
-        resolvers: [
-          ElementPlusResolver(),
-          // 自动注册图标组件
-          IconsResolver({
-            enabledCollections: ['ep']
-          })
-        ],
+        resolvers: [ElementPlusResolver(), VueUseComponentsResolver(), VueUseDirectiveResolver()],
         // 指定自定义组件位置(默认:src/components)
         dirs: ['src/components', 'src/**/components'],
         // 指定自动导入组件TS类型声明文件路径 (false:关闭自动生成)

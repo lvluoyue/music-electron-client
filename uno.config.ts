@@ -8,6 +8,7 @@ import {
   transformerDirectives,
   transformerVariantGroup
 } from 'unocss'
+import { FileSystemIconLoader } from '@iconify/utils/lib/loader/node-loaders'
 
 export default defineConfig({
   shortcuts: [
@@ -21,7 +22,17 @@ export default defineConfig({
   presets: [
     presetUno(),
     presetAttributify(),
-    presetIcons(),
+    presetIcons({
+      cdn: 'https://esm.sh/',
+      collections: {
+        q: () => import('@iconify-json/qlementine-icons/icons.json').then((i) => i.default),
+        l: FileSystemIconLoader('./resources/icons', (svg) =>
+          svg
+            .replace(/(<svg.*?width=)"(.*?)"/, '$1"1em"')
+            .replace(/(<svg.*?height=)"(.*?)"/, '$1"1em"')
+        )
+      }
+    }),
     presetTypography(),
     presetWebFonts({
       fonts: {
