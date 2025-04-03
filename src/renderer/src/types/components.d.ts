@@ -8,6 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AlbumImage: typeof import('./../components/album-image/index.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElCard: typeof import('element-plus/es')['ElCard']
     ElContainer: typeof import('element-plus/es')['ElContainer']
@@ -21,7 +22,12 @@ declare module 'vue' {
     ElOption: typeof import('element-plus/es')['ElOption']
     ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
     ElSelect: typeof import('element-plus/es')['ElSelect']
-    LyricPlay: typeof import('./../components/lyric-play/index.vue')['default']
+    LyricPlay: typeof import('@renderer/components/player-main/index.vue')['default']
+    PageAside: typeof import('./../layout/components/pageAside.vue')['default']
+    PageContent: typeof import('./../layout/components/pageContent.vue')['default']
+    PageFooter: typeof import('./../layout/components/pageFooter.vue')['default']
+    PageHeader: typeof import('./../layout/components/pageHeader.vue')['default']
+    PlayerMain: typeof import('./../components/player-main/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     UseDraggable: typeof import('@vueuse/components')['UseDraggable']

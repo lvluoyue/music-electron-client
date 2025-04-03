@@ -1348,7 +1348,7 @@
     sirv "^3.0.1"
     vue-flow-layout "^0.1.1"
 
-"@unocss/postcss@66.1.0-beta.8":
+"@unocss/postcss@66.1.0-beta.8", "@unocss/postcss@^66.1.0-beta.8":
   version "66.1.0-beta.8"
   resolved "https://registry.npmmirror.com/@unocss/postcss/-/postcss-66.1.0-beta.8.tgz#c0996c482e260f62360a12fa1eeef648d0d481c2"
   integrity sha512-zgBGVjULAVnV5G9nLwc/fAuGvKjAgSzRiaXktCW9qaLDVMrr9HJ3oQpFXyYEYcyKNQInQy1OoMQ0S7OHOlPYbg==

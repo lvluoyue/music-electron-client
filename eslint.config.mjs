@@ -25,7 +25,8 @@ export default tseslint.config(
     files: ['**/*.{ts,mts,tsx,vue}'],
     rules: {
       'vue/require-default-prop': 'off',
-      'vue/multi-word-component-names': 'off'
+      'vue/multi-word-component-names': 'off',
+      'max-len': ['error', { code: 120, ignoreComments: true, ignoreTrailingComments: true, ignoreUrls: true }]
     }
   },
   eslintConfigPrettier

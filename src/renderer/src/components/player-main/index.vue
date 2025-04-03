@@ -1,74 +1,17 @@
-<template>
-  <BackgroundRender
-    ref="bgRef"
-    :fps="30"
-    :render-scale="0.5"
-    :album="state.albumUrl"
-    :album-is-video="state.albumIsVideo"
-    :has-lyric="true"
-    :flow-speed="5"
-    :renderer="EplorRenderer"
-    class="player-background"
-  />
-  <LyricPlayer
-    ref="playerRef"
-    :lyric-lines="state.lyricLines"
-    :current-time="state.currentTime"
-    :enable-spring="true"
-    :enable-blur="true"
-    :enable-scale="true"
-    :hide-passed-lines="false"
-    :playing="state.playing"
-    align-anchor="top"
-    class="player-lyric"
-    @line-click="onClickLineLyric"
-  >
-    <template #bottom-line> Test Bottom Line </template>
-  </LyricPlayer>
-
-  <div
-    style="
-      position: absolute;
-      right: 0;
-      bottom: 0;
-      background-color: #0004;
-      margin: 1rem;
-      padding: 1rem;
-      border-radius: 0.5rem;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    "
-  >
-    <div>AMLL Vue 绑定调试页面</div>
-    <div>为了减少依赖，没有过多的调试设置。</div>
-    <div>更加详尽的调试可以直接使用 Core 模块调试。</div>
-    <button type="button" @click="onClickOpenAudio">加载音乐</button>
-    <button type="button" @click="onClickOpenAlbumImage">加载专辑背景资源（图片/视频）</button>
-    <button type="button" @click="onClickOpenTTMLLyric">加载歌词</button>
-    <button type="button" @click="play">播放</button>
-    <button type="button" @click="pause">暂停</button>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { EplorRenderer, LyricLine, LyricLineMouseEvent } from '@applemusic-like-lyrics/core'
 import { parseLrc } from '@applemusic-like-lyrics/lyric'
-import {
-  LyricPlayer,
-  BackgroundRender,
-  BackgroundRenderRef,
-  LyricPlayerRef
-} from '@applemusic-like-lyrics/vue'
+import { BackgroundRender, BackgroundRenderRef, LyricPlayer, LyricPlayerRef } from '@applemusic-like-lyrics/vue'
+import { usePlayerStore } from '@renderer/store/modules/player'
+
+const playerStore = usePlayerStore()
+const currentInfo = playerStore.currentInfo
 
 const state = reactive({
   audio: new Audio(),
-  albumUrl: '',
   albumIsVideo: false,
   currentTime: 0,
-  lyricLines: [] as LyricLine[],
-  playing: false
+  lyricLines: [] as LyricLine[]
 })
 state.audio.controls = true
 state.audio.preload = 'auto'
@@ -118,10 +61,10 @@ const onClickOpenAlbumImage = (): void => {
   input.onchange = (): void => {
     const file = input.files?.[0]
     if (file) {
-      if (state.albumUrl.trim().length > 0) {
-        URL.revokeObjectURL(state.albumUrl)
+      if (currentInfo.albumImage.trim().length > 0) {
+        URL.revokeObjectURL(currentInfo.albumImage)
       }
-      state.albumUrl = URL.createObjectURL(file)
+      currentInfo.albumImage = URL.createObjectURL(file)
       state.albumIsVideo = file.type.startsWith('video/')
     }
   }
@@ -146,21 +89,70 @@ const onClickOpenTTMLLyric = (): void => {
 
 const play = (): void => {
   state.audio.play()
-  state.playing = true
+  playerStore.isPlaying = true
 }
 
 const pause = (): void => {
   state.audio.pause()
-  state.playing = false
+  playerStore.isPlaying = false
 }
 </script>
 
-<style>
+<template>
+  <BackgroundRender
+    ref="bgRef"
+    :fps="60"
+    :render-scale="0.5"
+    :album="currentInfo.albumImage"
+    :album-is-video="state.albumIsVideo"
+    :flow-speed="50"
+    :low-freq-volume="1"
+    :has-lyric="true"
+    :renderer="EplorRenderer"
+    class="player-background"
+  />
+  <LyricPlayer
+    ref="playerRef"
+    :lyric-lines="state.lyricLines"
+    :current-time="state.currentTime"
+    :enable-spring="true"
+    :enable-blur="true"
+    :enable-scale="true"
+    :hide-passed-lines="false"
+    :playing="playerStore.isPlaying"
+    :align-position="0.5"
+    class="player-lyric"
+    @line-click="onClickLineLyric"
+  >
+    <template #bottom-line><div>Test Bottom Line</div></template>
+  </LyricPlayer>
+
+  <div
+    style="
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      background-color: #0004;
+      margin: 1rem;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    "
+  >
+    <button type="button" @click="onClickOpenAudio">加载音乐</button>
+    <button type="button" @click="onClickOpenAlbumImage">加载专辑背景资源（图片/视频）</button>
+    <button type="button" @click="onClickOpenTTMLLyric">加载歌词</button>
+    <button type="button" @click="play">播放</button>
+    <button type="button" @click="pause">暂停</button>
+  </div>
+</template>
+
+<style lang="scss">
 .player-background {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
+  @apply pos-fixed w-full h-full overflow-hidden z-0;
 }
 
 .player-lyric {
@@ -170,5 +162,13 @@ const pause = (): void => {
   height: 100vh;
   margin: 0 auto;
   mix-blend-mode: plus-lighter;
+}
+
+[class^='lyricMainLine-'] {
+  padding: 0.75rem !important;
+}
+
+.lyricLine-0-1-2:has(> *):hover {
+  box-shadow: 0 0 0 0.25rem var(--amll-lyric-view-hover-bg-color, #fff1) !important;
 }
 </style>

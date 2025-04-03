@@ -17,7 +17,8 @@ function createWindow(): void {
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       nodeIntegration: true, // 允许使用 Node.js API
-      sandbox: false
+      sandbox: false,
+      webSecurity: false // 禁用同源策略
     }
   })
 

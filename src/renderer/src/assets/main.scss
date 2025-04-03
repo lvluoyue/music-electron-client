@@ -1,7 +1,10 @@
 
 :root {
-  --amll-lyric-player-font-size: 30px;/*歌词字体大小*/
+  --el-menu-hover-bg-color: var(--el-color-primary-light-8) !important;
+  --amll-lyric-player-width: 370px;
+  --amll-lyric-player-font-size: 20px;// 歌词字体大小
   /*--amll-lyric-view-color: #fff; !*歌词颜色*!*/
+  --amll-lyric-view-hover-bg-color: #fff1;// 歌词hover背景色
 }
 
 *,
@@ -14,6 +17,7 @@
 
 body {
   min-height: 100vh;
+  overflow: hidden;
   font-family: Inter, 'Helvetica Neue', Helvetica, 'PingFang SC',
   'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
 }

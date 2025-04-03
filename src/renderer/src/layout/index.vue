@@ -1,9 +1,4 @@
-<script setup lang="ts">
-import PageHeader from '@renderer/layout/pageHeader.vue'
-import PageAside from '@renderer/layout/pageAside.vue'
-import PageContent from '@renderer/layout/pageContent.vue'
-import PageFooter from '@renderer/layout/pageFooter.vue'
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <el-container h-screen>

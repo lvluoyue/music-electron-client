@@ -19,6 +19,10 @@ export default defineConfig({
       // ...
     }
   },
+  rules: [
+    ['drag', { '-webkit-app-region': 'drag', '-webkit-user-select': 'none' }],
+    ['no-drag', { '-webkit-app-region': 'no-drag' }]
+  ],
   presets: [
     presetUno(),
     presetAttributify(),
