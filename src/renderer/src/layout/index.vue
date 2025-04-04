@@ -1,17 +1,17 @@
 <script setup lang="ts"></script>
 
 <template>
-  <el-container h-screen>
+  <el-container h-screen p2 rounded-9 overflow-hidden>
     <el-header>
       <page-header></page-header>
     </el-header>
-    <el-main flex-1 style="--el-main-padding: 0">
-      <el-container h-full>
+    <el-main flex-1 style="--el-main-padding: 0" no-drag>
+      <el-container h-full class="main-container">
         <page-aside></page-aside>
         <page-content></page-content>
       </el-container>
     </el-main>
-    <el-footer>
+    <el-footer no-drag>
       <page-footer></page-footer>
     </el-footer>
   </el-container>

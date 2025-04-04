@@ -56,6 +56,32 @@ export default defineConfig({
     ],
     server: {
       open: false
+    },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            vue: ['vue', 'vue-router', 'pinia', '@vueuse/core', '@vueuse/electron'],
+            elementPlus: ['element-plus'],
+            lyric: ['@applemusic-like-lyrics/lyric', '@applemusic-like-lyrics/vue'],
+            pixi: [
+              '@pixi/app',
+              '@pixi/core',
+              '@pixi/display',
+              '@pixi/filter-blur',
+              '@pixi/filter-bulge-pinch',
+              '@pixi/filter-color-matrix',
+              '@pixi/filter-noise',
+              '@pixi/sprite'
+            ]
+            //   axios: ['axios'],
+          },
+          // 用于从入口点创建的块的打包输出格式[name]表示文件名,[hash]表示该文件内容hash值
+          entryFileNames: 'js/[name].[hash].js',
+          // 用于命名代码拆分时创建的共享块的输出命名
+          chunkFileNames: 'js/[name].[hash].js'
+        }
+      }
     }
   }
 })

@@ -73,14 +73,22 @@ const searchHandller = (query: string): void => {
           <template #prefix>
             <i class="i-q-search-16"></i>
           </template>
-          <el-option v-for="item in searchOptions.options" :key="item.value" :label="item.label" :value="item.value" />
+          <!--          <el-option v-for="item in searchOptions.options" :key="item.value" :label="item.label" :value="item.value" />-->
         </el-select>
       </div>
-      <div v-if="appStore.isElectron" flex ml-auto gap-4 text-2xl z-10 no-drag>
-        <i h-60px :class="windowMinClass" @click="windowMinHandller"></i>
-        <i h-60px :class="windowMaxClass" @click="windowMaxHandller"></i>
-        <i h-60px :class="windowCloseClass" @click="windowCloseHandller"></i>
-      </div>
+      <transition name="icon-header" cursor-pointer z-20 items-center no-drag>
+        <div v-show="!(appStore.isPageLeave && playerStore.show) && appStore.isElectron" flex ml-auto gap-4 text-2xl>
+          <el-tooltip :show-after="1000" placement="top-start" content="最小化">
+            <i transition-color-300 :class="windowMinClass" @click="windowMinHandller"></i>
+          </el-tooltip>
+          <el-tooltip :show-after="1000" placement="top-start" :content="isMaximized ? '最大化' : '还原'">
+            <i transition-color-300 :class="windowMaxClass" @click="windowMaxHandller"></i>
+          </el-tooltip>
+          <el-tooltip :show-after="1000" placement="top-start" content="退出">
+            <i transition-color-300 :class="windowCloseClass" @click="windowCloseHandller"></i>
+          </el-tooltip>
+        </div>
+      </transition>
     </div>
   </el-card>
 </template>

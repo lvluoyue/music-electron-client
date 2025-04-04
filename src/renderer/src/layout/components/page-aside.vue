@@ -31,13 +31,22 @@ const route = useRoute()
 </template>
 
 <style scoped lang="scss">
-.el-menu-item {
-  @apply h12 rounded-xl m-x-3 m-y-1;
-  &.is-active {
-    background: var(--el-color-primary-light-9);
-  }
-  &:hover {
-    background-color: var(--el-menu-hover-bg-color) !important;
+:deep(.el-scrollbar__wrap--hidden-default) {
+  height: 100%;
+}
+.el-scrollbar {
+  border-right: 1px solid var(--el-menu-border-color);
+}
+.el-menu {
+  @apply b-r-none select-none;
+  &-item {
+    @apply h12 rounded-xl m-x-3 m-y-1;
+    &.is-active {
+      background: var(--el-color-primary-light-9);
+    }
+    &:hover {
+      background-color: var(--el-menu-hover-bg-color) !important;
+    }
   }
 }
 </style>

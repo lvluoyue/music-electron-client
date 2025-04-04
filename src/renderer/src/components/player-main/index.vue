@@ -3,27 +3,15 @@ import { EplorRenderer, LyricLine, LyricLineMouseEvent } from '@applemusic-like-
 import { parseLrc } from '@applemusic-like-lyrics/lyric'
 import { BackgroundRender, BackgroundRenderRef, LyricPlayer, LyricPlayerRef } from '@applemusic-like-lyrics/vue'
 import { usePlayerStore } from '@renderer/store/modules/player'
+import defaultAlbum from '@renderer/assets/default-player.png'
 
 const playerStore = usePlayerStore()
-const currentInfo = playerStore.currentInfo
+const playerInfo = playerStore.playerInfo
 
 const state = reactive({
-  audio: new Audio(),
   albumIsVideo: false,
-  currentTime: 0,
   lyricLines: [] as LyricLine[]
 })
-state.audio.controls = true
-state.audio.preload = 'auto'
-state.audio.onplay = (): void => {
-  const onFrame = (): void => {
-    if (!state.audio.paused) {
-      state.currentTime = (state.audio.currentTime * 1000) | 0
-      requestAnimationFrame(onFrame)
-    }
-  }
-  requestAnimationFrame(onFrame)
-}
 
 const playerRef = ref<LyricPlayerRef>()
 const bgRef = ref<BackgroundRenderRef>()
@@ -34,8 +22,8 @@ onMounted(() => {
 })
 
 const onClickLineLyric = (e: LyricLineMouseEvent): void => {
-  state.audio.currentTime = (e.line.getLine().startTime / 1000) | 0
-  state.audio.play()
+  playerStore.audio.currentTime = (e.line.getLine().startTime / 1000) | 0
+  playerStore.isPlaying = true
 }
 
 const onClickOpenAudio = (): void => {
@@ -45,10 +33,10 @@ const onClickOpenAudio = (): void => {
   input.onchange = (): void => {
     const file = input.files?.[0]
     if (file) {
-      if (state.audio.src.trim().length > 0) {
-        URL.revokeObjectURL(state.audio.src)
+      if (playerStore.audio.src.trim().length > 0) {
+        URL.revokeObjectURL(playerStore.audio.src)
       }
-      state.audio.src = URL.createObjectURL(file)
+      playerStore.audio.src = URL.createObjectURL(file)
     }
   }
   input.click()
@@ -61,10 +49,10 @@ const onClickOpenAlbumImage = (): void => {
   input.onchange = (): void => {
     const file = input.files?.[0]
     if (file) {
-      if (currentInfo.albumImage.trim().length > 0) {
-        URL.revokeObjectURL(currentInfo.albumImage)
+      if (playerInfo.albumImage.trim().length > 0) {
+        URL.revokeObjectURL(playerInfo.albumImage)
       }
-      currentInfo.albumImage = URL.createObjectURL(file)
+      playerInfo.albumImage = URL.createObjectURL(file)
       state.albumIsVideo = file.type.startsWith('video/')
     }
   }
@@ -87,15 +75,16 @@ const onClickOpenTTMLLyric = (): void => {
   input.click()
 }
 
-const play = (): void => {
-  state.audio.play()
-  playerStore.isPlaying = true
-}
-
-const pause = (): void => {
-  state.audio.pause()
-  playerStore.isPlaying = false
-}
+watch(
+  () => playerStore.isPlaying,
+  (val) => {
+    if (val) {
+      playerStore.audio.play()
+    } else {
+      playerStore.audio.pause()
+    }
+  }
+)
 </script>
 
 <template>
@@ -103,9 +92,9 @@ const pause = (): void => {
     ref="bgRef"
     :fps="60"
     :render-scale="0.5"
-    :album="currentInfo.albumImage"
+    :album="playerInfo.albumImage || defaultAlbum"
     :album-is-video="state.albumIsVideo"
-    :flow-speed="50"
+    :flow-speed="playerInfo.bpm / 2"
     :low-freq-volume="1"
     :has-lyric="true"
     :renderer="EplorRenderer"
@@ -113,8 +102,9 @@ const pause = (): void => {
   />
   <LyricPlayer
     ref="playerRef"
+    z10
     :lyric-lines="state.lyricLines"
-    :current-time="state.currentTime"
+    :current-time="playerInfo.currentTime"
     :enable-spring="true"
     :enable-blur="true"
     :enable-scale="true"
@@ -127,39 +117,24 @@ const pause = (): void => {
     <template #bottom-line><div>Test Bottom Line</div></template>
   </LyricPlayer>
 
-  <div
-    style="
-      position: absolute;
-      right: 0;
-      bottom: 0;
-      background-color: #0004;
-      margin: 1rem;
-      padding: 1rem;
-      border-radius: 0.5rem;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    "
-  >
+  <div pos-absolute right-0 bottom-80px bg-gray-6 m-xy p-xy rounded-lg color-white flex gap-2 flex-col z20>
     <button type="button" @click="onClickOpenAudio">加载音乐</button>
     <button type="button" @click="onClickOpenAlbumImage">加载专辑背景资源（图片/视频）</button>
     <button type="button" @click="onClickOpenTTMLLyric">加载歌词</button>
-    <button type="button" @click="play">播放</button>
-    <button type="button" @click="pause">暂停</button>
+    <button type="button" @click="playerStore.isPlaying = !playerStore.isPlaying">播放/暂停</button>
   </div>
 </template>
 
 <style lang="scss">
 .player-background {
-  @apply pos-fixed w-full h-full overflow-hidden z-0;
+  @apply pos-fixed w-full h-full overflow-hidden rounded-xl z-5;
 }
 
 .player-lyric {
   position: relative;
   top: 0;
   width: 40%;
-  height: 100vh;
+  height: 100%;
   margin: 0 auto;
   mix-blend-mode: plus-lighter;
 }

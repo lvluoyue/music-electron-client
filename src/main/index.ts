@@ -10,6 +10,7 @@ function createWindow(): void {
     height: 700,
     minWidth: 1100,
     minHeight: 700,
+    transparent: true,
     show: false,
     frame: false,
     autoHideMenuBar: true,
@@ -17,8 +18,7 @@ function createWindow(): void {
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       nodeIntegration: true, // 允许使用 Node.js API
-      sandbox: false,
-      webSecurity: false // 禁用同源策略
+      sandbox: false
     }
   })
 
@@ -29,6 +29,17 @@ function createWindow(): void {
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
     return { action: 'deny' }
+  })
+  const filter = {
+    urls: ['https://y.qq.com/*']
+  }
+
+  mainWindow.webContents.session.webRequest.onHeadersReceived(filter, (details, callback) => {
+    const { responseHeaders } = details
+    if (responseHeaders) {
+      responseHeaders['Access-Control-Allow-Origin'] = ['*']
+    }
+    callback({ responseHeaders })
   })
 
   ipcMain.on('window-min', function () {

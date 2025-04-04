@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <!--  <div @click="console.log(122)">44525</div>-->
+  <el-card shadow="never">11</el-card>
 </template>
 
 <style scoped></style>
