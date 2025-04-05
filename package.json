@@ -23,7 +23,8 @@
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^4.0.0",
-    "electron-updater": "^6.6.2"
+    "electron-updater": "^6.6.2",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "@applemusic-like-lyrics/lyric": "^0.2.4",
@@ -31,7 +32,6 @@
     "@electron-toolkit/eslint-config-prettier": "3.0.0",
     "@electron-toolkit/eslint-config-ts": "^3.0.0",
     "@electron-toolkit/tsconfig": "^1.0.1",
-    "@iconify-json/ep": "^1.2.2",
     "@iconify-json/qlementine-icons": "^1.2.5",
     "@pixi/app": "^7.4.3",
     "@pixi/core": "^7.4.3",
@@ -41,6 +41,7 @@
     "@pixi/filter-color-matrix": "^7.4.3",
     "@pixi/filter-noise": "^7.4.3",
     "@pixi/sprite": "^7.4.3",
+    "@types/howler": "^2.2.12",
     "@types/node": "^22.14.0",
     "@unocss/postcss": "^66.1.0-beta.8",
     "@unocss/preset-icons": "^66.1.0-beta.8",
@@ -56,12 +57,13 @@
     "element-plus": "^2.9.7",
     "eslint": "^9.23.0",
     "eslint-plugin-vue": "^10.0.0",
+    "howler": "^2.2.4",
     "jss": "^10.10.0",
     "jss-preset-default": "^10.10.0",
     "pinia": "^3.0.1",
+    "pinia-plugin-persistedstate": "^4.2.0",
     "prettier": "^3.5.3",
     "sass-embedded": "^1.86.3",
-    "sqlite3": "^5.1.7",
     "typescript": "^5.8.2",
     "unocss": "^66.1.0-beta.8",
     "unplugin-auto-import": "^19.1.2",

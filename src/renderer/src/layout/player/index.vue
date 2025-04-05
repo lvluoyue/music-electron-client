@@ -1,22 +1,21 @@
 <script setup lang="ts">
-import { usePlayerStore } from '@renderer/store/modules/player'
 import { useAppStore } from '@renderer/store'
 import emptyAlbum from '@renderer/assets/empty-album.svg'
+import { usePlayerStateStore } from '@renderer/store/modules/playerState'
 
 const appStore = useAppStore()
-const playerStore = usePlayerStore()
-
+const { state } = usePlayerStateStore()
 const image = new URL(emptyAlbum).href
 </script>
 
 <template>
   <transition name="slide-up">
-    <div v-show="playerStore.show" absolute top-0 left-0 w-full h-full>
+    <div v-show="state.show" absolute top-0 left-0 w-full h-full>
       <transition name="icon-header">
         <div v-show="!appStore.isPageLeave" pos-fixed flex h-80px z20 bg-none items-center px-20px cursor-pointer>
           <i
             class="hover:color-green i-q-chevron-down-12 color-coolGray-3 text-2xl no-drag"
-            @click="playerStore.show = false"
+            @click="state.show = false"
           />
         </div>
       </transition>

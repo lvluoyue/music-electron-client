@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { usePlayerStore } from '@renderer/store/modules/player'
 import defaultAlbum from '@renderer/assets/default-album.png'
+import { usePlayerStateStore } from '@renderer/store/modules/playerState'
 
-const playerStore = usePlayerStore()
+const { state } = usePlayerStateStore()
 
 const props = defineProps({
   image: {
@@ -19,7 +19,7 @@ const imageClass = computed(() => {
   return { 'album-image': true, 'album-image--hover': props.hover }
 })
 
-const imageClick = (): boolean => (playerStore.show = !playerStore.show)
+const imageClick = (): boolean => (state.show = !state.show)
 </script>
 
 <template>

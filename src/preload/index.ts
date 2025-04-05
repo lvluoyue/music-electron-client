@@ -1,6 +1,7 @@
-import { contextBridge } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 import { useIpcRenderer } from '@vueuse/electron'
+import { queryParam } from '../main/sqlite.d'
 
 const { send } = useIpcRenderer()
 
@@ -8,8 +9,11 @@ const { send } = useIpcRenderer()
 const api = {
   windowMin: (): void => send('window-min'),
   windowMax: (): void => send('window-max'),
-  windowClose: (): void => send('window-close')
+  windowClose: (): void => send('window-close'),
+  sqlQuery: <R>(param: queryParam): Promise<R[]> => ipcRenderer.invoke('sql-query', param)
 }
+
+export type Api = typeof api
 
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise

@@ -2,6 +2,7 @@ import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import { join } from 'path'
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { sqlDelete, sqlInsert, sqlQuery, sqlUpdate } from './sqlite'
 
 function createWindow(): void {
   // Create the browser window.
@@ -18,6 +19,7 @@ function createWindow(): void {
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       nodeIntegration: true, // 允许使用 Node.js API
+      // contextIsolation: false,
       sandbox: false
     }
   })
@@ -60,6 +62,21 @@ function createWindow(): void {
     mainWindow.close()
   })
 
+  ipcMain.handle('sql-query', (_, param) => {
+    return sqlQuery(param)
+  })
+
+  ipcMain.handle('sql-insert', async (_, param) => {
+    return await sqlInsert(param)
+  })
+
+  ipcMain.handle('sql-update', async (_, param) => {
+    return await sqlUpdate(param)
+  })
+
+  ipcMain.handle('sql-delete', async (_, param) => {
+    return await sqlDelete(param)
+  })
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {

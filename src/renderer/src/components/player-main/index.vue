@@ -1,18 +1,12 @@
 <script setup lang="ts">
-import { EplorRenderer, LyricLine, LyricLineMouseEvent } from '@applemusic-like-lyrics/core'
+import { EplorRenderer, LyricLineMouseEvent } from '@applemusic-like-lyrics/core'
 import { parseLrc } from '@applemusic-like-lyrics/lyric'
 import { BackgroundRender, BackgroundRenderRef, LyricPlayer, LyricPlayerRef } from '@applemusic-like-lyrics/vue'
-import { usePlayerStore } from '@renderer/store/modules/player'
-import defaultAlbum from '@renderer/assets/default-player.png'
-
-const playerStore = usePlayerStore()
-const playerInfo = playerStore.playerInfo
-
-const state = reactive({
-  albumIsVideo: false,
-  lyricLines: [] as LyricLine[]
-})
-
+import { usePlayerStateStore } from '@renderer/store/modules/playerState'
+import { usePlayerInfoStore } from '@renderer/store/modules/playerInfo'
+//本组件仅与背景渲染，歌词播放，音频播放集成
+//实时时间，音频时间，播放状态，音量，播放进度
+const playerStateStore = usePlayerStateStore()
 const playerRef = ref<LyricPlayerRef>()
 const bgRef = ref<BackgroundRenderRef>()
 
@@ -22,8 +16,8 @@ onMounted(() => {
 })
 
 const onClickLineLyric = (e: LyricLineMouseEvent): void => {
-  playerStore.audio.currentTime = (e.line.getLine().startTime / 1000) | 0
-  playerStore.isPlaying = true
+  playerStateStore.howl.seek(e.line.getLine().startTime / 1000)
+  playerStateStore.state.isPlaying = true
 }
 
 const onClickOpenAudio = (): void => {
@@ -33,10 +27,8 @@ const onClickOpenAudio = (): void => {
   input.onchange = (): void => {
     const file = input.files?.[0]
     if (file) {
-      if (playerStore.audio.src.trim().length > 0) {
-        URL.revokeObjectURL(playerStore.audio.src)
-      }
-      playerStore.audio.src = URL.createObjectURL(file)
+      playerStateStore.howl?.pause()?.unload()
+      playerStateStore.state.playUrl = URL.createObjectURL(file)
     }
   }
   input.click()
@@ -49,11 +41,11 @@ const onClickOpenAlbumImage = (): void => {
   input.onchange = (): void => {
     const file = input.files?.[0]
     if (file) {
-      if (playerInfo.albumImage.trim().length > 0) {
-        URL.revokeObjectURL(playerInfo.albumImage)
+      if (playerStateStore.state.albumImage.trim().length > 0) {
+        URL.revokeObjectURL(playerStateStore.state.albumImage)
       }
-      playerInfo.albumImage = URL.createObjectURL(file)
-      state.albumIsVideo = file.type.startsWith('video/')
+      playerStateStore.state.albumImage = URL.createObjectURL(file)
+      playerStateStore.state.albumIsVideo = file.type.startsWith('video/')
     }
   }
   input.click()
@@ -69,20 +61,38 @@ const onClickOpenTTMLLyric = (): void => {
       const text = await file.text()
       const result = parseLrc(text)
       console.log('parseTTML', result)
-      state.lyricLines = result
+      playerStateStore.state.lyricLines = result
     }
   }
   input.click()
 }
 
+const { setting } = usePlayerInfoStore()
+
 watch(
-  () => playerStore.isPlaying,
+  () => playerStateStore.state.isPlaying,
   (val) => {
     if (val) {
-      playerStore.audio.play()
+      playerStateStore.howl.fade(0, setting.volume, 1500, playerStateStore.howl.play())
     } else {
-      playerStore.audio.pause()
+      playerStateStore.howl.fade(setting.volume, 0, 1500, playerStateStore.state.playerId)
+      setTimeout(() => playerStateStore.howl.pause(), 1500)
     }
+  }
+)
+
+watch(
+  () => playerStateStore.state.volume,
+  (val) => {
+    playerStateStore.howl.volume(val)
+  }
+)
+
+watch(
+  () => playerStateStore.state.mute,
+  () => {
+    console.log('mute')
+    playerStateStore.howl.mute(playerStateStore.state.mute)
   }
 )
 </script>
@@ -92,9 +102,9 @@ watch(
     ref="bgRef"
     :fps="60"
     :render-scale="0.5"
-    :album="playerInfo.albumImage || defaultAlbum"
-    :album-is-video="state.albumIsVideo"
-    :flow-speed="playerInfo.bpm / 2"
+    :album="playerStateStore.state.albumImage"
+    :album-is-video="playerStateStore.state.albumIsVideo"
+    :flow-speed="playerStateStore.state.bpm / 2"
     :low-freq-volume="1"
     :has-lyric="true"
     :renderer="EplorRenderer"
@@ -103,13 +113,13 @@ watch(
   <LyricPlayer
     ref="playerRef"
     z10
-    :lyric-lines="state.lyricLines"
-    :current-time="playerInfo.currentTime"
+    :lyric-lines="playerStateStore.state.lyricLines"
+    :current-time="playerStateStore.state.currentTime"
     :enable-spring="true"
     :enable-blur="true"
     :enable-scale="true"
     :hide-passed-lines="false"
-    :playing="playerStore.isPlaying"
+    :playing="playerStateStore.state.isPlaying"
     :align-position="0.5"
     class="player-lyric"
     @line-click="onClickLineLyric"
@@ -121,7 +131,9 @@ watch(
     <button type="button" @click="onClickOpenAudio">加载音乐</button>
     <button type="button" @click="onClickOpenAlbumImage">加载专辑背景资源（图片/视频）</button>
     <button type="button" @click="onClickOpenTTMLLyric">加载歌词</button>
-    <button type="button" @click="playerStore.isPlaying = !playerStore.isPlaying">播放/暂停</button>
+    <button type="button" @click="playerStateStore.state.isPlaying = !playerStateStore.state.isPlaying">
+      播放/暂停
+    </button>
   </div>
 </template>
 

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import logo from '@renderer/assets/logo.png'
 import { useAppStore } from '@renderer/store'
-import { usePlayerStore } from '@renderer/store/modules/player'
+import { usePlayerStateStore } from '@renderer/store/modules/playerState'
 
 const appStore = useAppStore()
-const playerStore = usePlayerStore()
+const { state } = usePlayerStateStore()
 
 const isMaximized = ref(false)
 
@@ -22,19 +22,19 @@ const windowCloseHandller = (): void => {
 const windowMinClass = computed(() => [
   'hover:color-green',
   'i-q-windows-minimize-16',
-  playerStore.show ? 'color-coolGray-3' : 'color-coolGray-5'
+  state.show ? 'color-coolGray-3' : 'color-coolGray-5'
 ])
 
 const windowMaxClass = computed(() => [
   'hover:color-green',
-  playerStore.show ? 'color-coolGray-3' : 'color-coolGray-5',
+  state.show ? 'color-coolGray-3' : 'color-coolGray-5',
   isMaximized.value ? 'i-q-windows-unmaximize-16' : 'i-q-windows-maximize-16'
 ])
 
 const windowCloseClass = computed(() => [
   'hover:color-green',
   'i-q-windows-close-16',
-  playerStore.show ? 'color-coolGray-3' : 'color-coolGray-5'
+  state.show ? 'color-coolGray-3' : 'color-coolGray-5'
 ])
 
 const searchOptions = ref({
@@ -77,7 +77,7 @@ const searchHandller = (query: string): void => {
         </el-select>
       </div>
       <transition name="icon-header" cursor-pointer z-20 items-center no-drag>
-        <div v-show="!(appStore.isPageLeave && playerStore.show) && appStore.isElectron" flex ml-auto gap-4 text-2xl>
+        <div v-show="!(appStore.isPageLeave && state.show) && appStore.isElectron" flex ml-auto gap-4 text-2xl>
           <el-tooltip :show-after="1000" placement="top-start" content="最小化">
             <i transition-color-300 :class="windowMinClass" @click="windowMinHandller"></i>
           </el-tooltip>
