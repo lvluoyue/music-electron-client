@@ -1,24 +1,18 @@
 import { LyricLine } from '@applemusic-like-lyrics/core'
 import defaultAlbum from '@renderer/assets/default-album.png'
 import { usePlayerInfoStore } from '@renderer/store/modules/playerInfo'
-import { Howl } from 'howler'
+import { Howl, Howler } from 'howler'
 
 export const usePlayerStateStore = defineStore(
   'playerState',
   () => {
     const playerInfoStore = usePlayerInfoStore()
-
     const state = reactive({
       show: false,
       isPlaying: false,
-      // 播放器唯一ID（howl）
-      playerId: 0,
-      // 音量
-      volume: 100,
-      // 静音
-      mute: false,
       // 播放进度
       currentTime: 0,
+      volume: 1,
       // 播放速度
       bpm: 60,
       // 总时长
@@ -31,70 +25,52 @@ export const usePlayerStateStore = defineStore(
       playUrl: ''
     })
 
-    watchEffect(() => {
-      state.mute = playerInfoStore.setting.mute
-    })
-
     const createHowl = (audioFileUrl): Howl => {
       const howl = new Howl({
         src: [audioFileUrl],
-        // html5: true,
+        html5: true,
         format: ['mp3', 'ogg', 'wav', 'm4a', 'flac', 'wma', 'aac', 'wavpack', 'dolby', 'mp4'],
-        onplay: (id): void => {
-          state.playerId = id
-        },
-        onpause: (): void => {
-          console.log('onpause')
-        },
-        onend: (): void => {
-          // playerStore.isPlaying = false
-          // 淡出效果：从当前音量淡出到 0 在 1 秒内完成
-          // howl?.fade(howl.volume(), 0, 1000)
-          console.log('onend')
-        },
-        onvolume: (): void => {
-          if (howl) {
-            state.volume = howl.volume()
-          }
-          console.log('onvolume')
-        },
+        // 加载时无id
         onload: (): void => {
           state.duration = howl.duration() * 1000
           state.currentTime = 0
-          console.log('onload')
+          state.isPlaying = false
+        },
+        onplay: (): void => {
+          howl.fade(0, 1, 1000)
+          // 淡入效果：从 0 淡入到 1 在 1 秒内完成
+          const interval = setInterval(() => {
+            if (howl.playing()) {
+              state.currentTime = howl.seek() * 1000
+            } else {
+              clearInterval(interval)
+            }
+          }, 100)
+        },
+        onend: (): void => {
+          state.currentTime = 0
+        },
+        onvolume: (): void => {
+          state.volume = howl.volume() as number
         },
         onfade: (): void => {
-          console.log('onfade')
-        }
-      })
-      howl.on('seek', () => {
-        state.currentTime = howl.seek() * 1000
-        console.log('seek')
-      })
-      howl.on('end', () => {
-        state.currentTime = 0
-        console.log('end')
-      })
-      howl.on('load', () => {
-        state.currentTime = 0
-      })
-      howl.on('play', () => {
-        // 淡入效果：从 0 淡入到 1 在 1 秒内完成
-        const interval = setInterval(() => {
-          if (state.isPlaying) {
-            state.currentTime = howl.seek() * 1000
-          } else {
-            clearInterval(interval)
+          // 淡出效果完成后暂停
+          if (!state.isPlaying && state.volume == 0) {
+            howl.pause()
           }
-        }, 100)
-      })
-      howl.on('pause', () => {
-        // 淡出效果：从当前音量淡出到 0 在 1 秒内完成
+        },
+        onseek: (): void => {
+          state.currentTime = howl.seek() * 1000
+        }
       })
       return howl
     }
 
-    const howl = computed(() => createHowl(state.playUrl))
+    const howl = computed(() => {
+      console.log('howl重新加载了')
+      Howler.unload()
+      return createHowl(state.playUrl)
+    })
     return {
       state,
       howl

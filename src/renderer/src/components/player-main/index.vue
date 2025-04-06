@@ -3,7 +3,6 @@ import { EplorRenderer, LyricLineMouseEvent } from '@applemusic-like-lyrics/core
 import { parseLrc } from '@applemusic-like-lyrics/lyric'
 import { BackgroundRender, BackgroundRenderRef, LyricPlayer, LyricPlayerRef } from '@applemusic-like-lyrics/vue'
 import { usePlayerStateStore } from '@renderer/store/modules/playerState'
-import { usePlayerInfoStore } from '@renderer/store/modules/playerInfo'
 //本组件仅与背景渲染，歌词播放，音频播放集成
 //实时时间，音频时间，播放状态，音量，播放进度
 const playerStateStore = usePlayerStateStore()
@@ -27,8 +26,8 @@ const onClickOpenAudio = (): void => {
   input.onchange = (): void => {
     const file = input.files?.[0]
     if (file) {
-      playerStateStore.howl?.pause()?.unload()
       playerStateStore.state.playUrl = URL.createObjectURL(file)
+      playerStateStore.howl.load()
     }
   }
   input.click()
@@ -67,32 +66,20 @@ const onClickOpenTTMLLyric = (): void => {
   input.click()
 }
 
-const { setting } = usePlayerInfoStore()
-
+// 播放状态监听
 watch(
   () => playerStateStore.state.isPlaying,
   (val) => {
     if (val) {
-      playerStateStore.howl.fade(0, setting.volume, 1500, playerStateStore.howl.play())
+      if (!playerStateStore.howl.playing()) {
+        playerStateStore.howl.play()
+      } else {
+        playerStateStore.howl.fade(0, 1, 1000)
+      }
     } else {
-      playerStateStore.howl.fade(setting.volume, 0, 1500, playerStateStore.state.playerId)
-      setTimeout(() => playerStateStore.howl.pause(), 1500)
+      //添加淡出效果
+      playerStateStore.howl.fade(1, 0, 1000)
     }
-  }
-)
-
-watch(
-  () => playerStateStore.state.volume,
-  (val) => {
-    playerStateStore.howl.volume(val)
-  }
-)
-
-watch(
-  () => playerStateStore.state.mute,
-  () => {
-    console.log('mute')
-    playerStateStore.howl.mute(playerStateStore.state.mute)
   }
 )
 </script>
@@ -129,11 +116,8 @@ watch(
 
   <div pos-absolute right-0 bottom-80px bg-gray-6 m-xy p-xy rounded-lg color-white flex gap-2 flex-col z20>
     <button type="button" @click="onClickOpenAudio">加载音乐</button>
-    <button type="button" @click="onClickOpenAlbumImage">加载专辑背景资源（图片/视频）</button>
+    <button type="button" @click="onClickOpenAlbumImage">加载背景资源</button>
     <button type="button" @click="onClickOpenTTMLLyric">加载歌词</button>
-    <button type="button" @click="playerStateStore.state.isPlaying = !playerStateStore.state.isPlaying">
-      播放/暂停
-    </button>
   </div>
 </template>
 
