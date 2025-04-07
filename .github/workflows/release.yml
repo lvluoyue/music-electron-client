@@ -15,16 +15,17 @@ jobs:
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 20 # 推荐使用 LTS 版本（如 18.x 或 20.x）
+          node-version: 22 # 推荐使用 LTS 版本（如 18.x 或 20.x）
           cache: yarn # 启用 npm 依赖缓存
+          cache-dependency-path: '**/yarn.lock'
 
       - name: Install Dependencies
-        run: yarn
+        run: yarn --non-interactive
 
       - name: build-linux
         if: matrix.os == 'ubuntu-latest'
@@ -32,11 +33,11 @@ jobs:
 
       - name: build-mac
         if: matrix.os == 'macos-latest'
-        run: yarn run build:mac
+        run: yarn build:mac
 
       - name: build-win
         if: matrix.os == 'windows-latest'
-        run: yarn run build:win
+        run: yarn build:win
 
       - name: release
         uses: softprops/action-gh-release@v1
