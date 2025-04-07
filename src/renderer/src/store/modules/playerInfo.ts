@@ -2,7 +2,7 @@ import { LyricLine } from '@applemusic-like-lyrics/core'
 import { Howler } from 'howler'
 
 export const usePlayerInfoStore = defineStore('playerInfo', () => {
-  const playList = ref<playListInterface[]>([
+  const playList = ref<playerInfo[]>([
     {
       id: 0,
       mid: '',

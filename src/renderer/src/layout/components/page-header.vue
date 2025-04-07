@@ -6,15 +6,21 @@ import { usePlayerStateStore } from '@renderer/store/modules/playerState'
 const appStore = useAppStore()
 const { state } = usePlayerStateStore()
 
-const isMaximized = ref(false)
-
 const windowMinHandller = (): void => {
-  window.api.windowMin()
+  window.api.windowMinimize()
 }
 const windowMaxHandller = (): void => {
-  window.api.windowMax()
-  isMaximized.value = !isMaximized.value
+  appStore.isFullScreen = !appStore.isFullScreen
 }
+
+watchEffect(() => {
+  if (appStore.isFullScreen) {
+    window.api.windowMaximize()
+  } else {
+    window.api.windowRestore()
+  }
+})
+
 const windowCloseHandller = (): void => {
   window.api.windowClose()
 }
@@ -28,7 +34,7 @@ const windowMinClass = computed(() => [
 const windowMaxClass = computed(() => [
   'hover:color-green',
   state.show ? 'color-coolGray-3' : 'color-coolGray-5',
-  isMaximized.value ? 'i-q-windows-unmaximize-16' : 'i-q-windows-maximize-16'
+  appStore.isFullScreen ? 'i-q-windows-unmaximize-16' : 'i-q-windows-maximize-16'
 ])
 
 const windowCloseClass = computed(() => [
@@ -78,13 +84,13 @@ const searchHandller = (query: string): void => {
       </div>
       <transition name="icon-header" cursor-pointer z-20 items-center no-drag>
         <div v-show="!(appStore.isPageLeave && state.show) && appStore.isElectron" flex ml-auto gap-4 text-2xl>
-          <el-tooltip :show-after="1000" placement="top-start" content="最小化">
+          <el-tooltip :show-after="1000" placement="top" content="最小化">
             <i transition-color-300 :class="windowMinClass" @click="windowMinHandller"></i>
           </el-tooltip>
-          <el-tooltip :show-after="1000" placement="top-start" :content="isMaximized ? '最大化' : '还原'">
+          <el-tooltip :show-after="1000" placement="top" :content="appStore.isFullScreen ? '最大化' : '还原'">
             <i transition-color-300 :class="windowMaxClass" @click="windowMaxHandller"></i>
           </el-tooltip>
-          <el-tooltip :show-after="1000" placement="top-start" content="退出">
+          <el-tooltip :show-after="1000" placement="top" content="退出">
             <i transition-color-300 :class="windowCloseClass" @click="windowCloseHandller"></i>
           </el-tooltip>
         </div>

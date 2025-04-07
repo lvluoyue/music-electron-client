@@ -1,5 +1,5 @@
-appId: com.electron.app
-productName: electron-app
+appId: com.luoyue.music
+productName: 桌面端音乐软件
 directories:
   buildResources: build
 files:
@@ -10,9 +10,10 @@ files:
   - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
   - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
 asarUnpack:
+  - node_modules/sqlite3
   - resources/**
 win:
-  executableName: electron-app
+  executableName: xx音乐
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}
@@ -33,7 +34,7 @@ linux:
     - AppImage
     - snap
     - deb
-  maintainer: electronjs.org
+  maintainer: api.vkeys.cn
   category: Utility
 appImage:
   artifactName: ${name}-${version}.${ext}

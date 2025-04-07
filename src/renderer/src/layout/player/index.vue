@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { useAppStore } from '@renderer/store'
-import emptyAlbum from '@renderer/assets/empty-album.svg'
 import { usePlayerStateStore } from '@renderer/store/modules/playerState'
 
 const appStore = useAppStore()
 const { state } = usePlayerStateStore()
-const image = new URL(emptyAlbum).href
 </script>
 
 <template>
@@ -21,8 +19,9 @@ const image = new URL(emptyAlbum).href
       </transition>
       <player-main></player-main>
       <transition name="player-button">
-        <div v-show="!appStore.isPageLeave" pos-fixed bottom-0 flex h-80px w-full z20 items-center px-5vw gap-32>
-          <album-image :image="image"></album-image>
+        <div v-show="!appStore.isPageLeave" pos-fixed bottom-0 h-80px w-full z20>
+          <!--          <album-image :image="image"></album-image>-->
+          <page-footer :is-player="true" pos-fixed bottom-0 h-80px w-full z20></page-footer>
         </div>
       </transition>
     </div>

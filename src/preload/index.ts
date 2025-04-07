@@ -7,8 +7,9 @@ const { send } = useIpcRenderer()
 
 // Custom APIs for renderer
 const api = {
-  windowMin: (): void => send('window-min'),
-  windowMax: (): void => send('window-max'),
+  windowMinimize: (): void => send('window-minimize'),
+  windowMaximize: (): void => send('window-maximize'),
+  windowRestore: (): void => send('window-restore'),
   windowClose: (): void => send('window-close'),
   sqlQuery: <R>(param: queryParam): Promise<R[]> => ipcRenderer.invoke('sql-query', param)
 }

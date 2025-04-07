@@ -1,5 +1,4 @@
 import { LyricLine } from '@applemusic-like-lyrics/core'
-import defaultAlbum from '@renderer/assets/default-album.png'
 import { usePlayerInfoStore } from '@renderer/store/modules/playerInfo'
 import { Howl, Howler } from 'howler'
 
@@ -7,20 +6,20 @@ export const usePlayerStateStore = defineStore(
   'playerState',
   () => {
     const playerInfoStore = usePlayerInfoStore()
-    const state = reactive({
+    const state = reactive<playerState>({
+      id: 0,
+      mid: '',
+      title: '',
+      subtitle: '',
       show: false,
       isPlaying: false,
-      // 播放进度
       currentTime: 0,
       volume: 1,
-      // 播放速度
       bpm: 60,
-      // 总时长
       duration: 0,
-      // 专辑图片是否为视频
       albumIsVideo: false,
-      // 专辑图片
-      albumImage: playerInfoStore.setting.albumImage || defaultAlbum,
+      album: '',
+      albumImage: playerInfoStore.setting.albumImage,
       lyricLines: [] as LyricLine[],
       playUrl: ''
     })
@@ -36,11 +35,11 @@ export const usePlayerStateStore = defineStore(
           state.currentTime = 0
           state.isPlaying = false
         },
-        onplay: (): void => {
+        onplay: (id): void => {
           howl.fade(0, 1, 1000)
           // 淡入效果：从 0 淡入到 1 在 1 秒内完成
           const interval = setInterval(() => {
-            if (howl.playing()) {
+            if (howl.playing(id)) {
               state.currentTime = howl.seek() * 1000
             } else {
               clearInterval(interval)
@@ -49,6 +48,7 @@ export const usePlayerStateStore = defineStore(
         },
         onend: (): void => {
           state.currentTime = 0
+          state.isPlaying = false
         },
         onvolume: (): void => {
           state.volume = howl.volume() as number

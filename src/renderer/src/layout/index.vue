@@ -15,6 +15,7 @@ const playListShow = ref(false)
     </el-main>
     <el-footer no-drag>
       <page-footer
+        h-full
         :play-list-show="playListShow"
         @update:play-list-show="(value) => (playListShow = value)"
       ></page-footer>

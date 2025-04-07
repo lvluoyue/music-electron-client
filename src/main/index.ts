@@ -12,6 +12,7 @@ function createWindow(): void {
     minWidth: 1100,
     minHeight: 700,
     transparent: true,
+    resizable: false,
     show: false,
     frame: false,
     autoHideMenuBar: true,
@@ -44,17 +45,19 @@ function createWindow(): void {
     callback({ responseHeaders })
   })
 
-  ipcMain.on('window-min', function () {
+  ipcMain.on('window-minimize', function () {
     mainWindow.minimize()
   })
 
   //接收最大化命令
-  ipcMain.on('window-max', function () {
-    if (mainWindow.isMaximized()) {
-      mainWindow.restore()
-    } else {
-      mainWindow.maximize()
-    }
+  ipcMain.on('window-restore', function () {
+    mainWindow.setContentSize(1100, 700, true)
+    mainWindow.center()
+  })
+
+  //接收最大化命令
+  ipcMain.on('window-maximize', function () {
+    mainWindow.maximize()
   })
 
   //接收关闭命令
