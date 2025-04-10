@@ -34,5 +34,6 @@ declare module 'vue' {
     PlayerMain: typeof import('./../components/player-main/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SidebarItem: typeof import('./../layout/components/SidebarItem.vue')['default']
   }
 }

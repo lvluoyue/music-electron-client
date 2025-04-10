@@ -3,6 +3,7 @@ import logo from '@renderer/assets/logo.png'
 import { useAppStore } from '@renderer/store'
 import { usePlayerStateStore } from '@renderer/store/modules/playerState'
 
+const router = useRouter()
 const appStore = useAppStore()
 const { state } = usePlayerStateStore()
 
@@ -12,15 +13,15 @@ const windowMinHandller = (): void => {
 const windowMaxHandller = (): void => {
   appStore.isFullScreen = !appStore.isFullScreen
 }
-
-watchEffect(() => {
-  if (appStore.isFullScreen) {
-    window.api.windowMaximize()
-  } else {
-    window.api.windowRestore()
-  }
-})
-
+if (appStore.isElectron) {
+  watchEffect(() => {
+    if (appStore.isFullScreen) {
+      window.api.windowMaximize()
+    } else {
+      window.api.windowRestore()
+    }
+  })
+}
 const windowCloseHandller = (): void => {
   window.api.windowClose()
 }
@@ -49,12 +50,28 @@ const searchOptions = ref({
   options: []
 })
 
+const filterHandller = (value): void => {
+  searchOptions.value.keyword = value
+  console.log(value)
+}
+
 const searchHandller = (query: string): void => {
   searchOptions.value.loading = true
   console.log(query)
   setTimeout(() => {
     searchOptions.value.loading = false
   }, 1000)
+}
+
+const searchEnterHandller = (e): void => {
+  console.log(e)
+  if (searchOptions.value.keyword.length == 0) {
+    return
+  }
+  router.push({
+    name: 'searchSong',
+    params: { keyword: searchOptions.value.keyword }
+  })
 }
 </script>
 
@@ -64,17 +81,18 @@ const searchHandller = (query: string): void => {
       <el-image :src="logo"></el-image>
       <div no-drag>
         <el-select
-          v-model="searchOptions.keyword"
+          v-model.trim="searchOptions.keyword"
           suffix-icon="search"
           remote-show-suffix
-          multiple
           filterable
           remote
           reserve-keyword
           placeholder="输入搜索关键词"
           :remote-method="searchHandller"
+          :filter-method="filterHandller"
           :loading="searchOptions.loading"
-          style="width: 240px"
+          w24
+          @keyup.enter="searchEnterHandller(searchOptions.keyword)"
         >
           <template #prefix>
             <i class="i-q-search-16"></i>

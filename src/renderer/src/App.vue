@@ -7,16 +7,22 @@ const appStore = useAppStore()
 const isPageLeave = usePageLeave()
 // eslint-disable-next-line no-undef
 let timeoutId: NodeJS.Timeout
-watch(isPageLeave, (newValue) => {
-  if (newValue) {
-    timeoutId = setTimeout(() => {
-      appStore.isPageLeave = true
-    }, 3000)
-  } else {
-    clearTimeout(timeoutId)
-    appStore.isPageLeave = false
+watch(
+  isPageLeave,
+  (newValue) => {
+    if (newValue) {
+      timeoutId = setTimeout(() => {
+        appStore.isPageLeave = true
+      }, 3000)
+    } else {
+      clearTimeout(timeoutId)
+      appStore.isPageLeave = false
+    }
+  },
+  {
+    immediate: true
   }
-})
+)
 
 onMounted(async () => {
   console.log(
