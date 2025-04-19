@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { usePlayerInfoStore } from '@renderer/store/modules/playerInfo'
 import { usePlayerStateStore } from '@renderer/store/modules/playerState'
-import { formatDuring } from '../../utils'
 import emptyAlbum from '@renderer/assets/empty-album.svg'
+import { formatDuring } from '@renderer/utils'
 
 const { setting } = usePlayerInfoStore()
 const playerStateStore = usePlayerStateStore()
@@ -16,7 +16,6 @@ let temp = 0
 const input = (value): void => {
   temp = value
 }
-
 const playChange = (): void => {
   playerStateStore.state.isPlaying = !playerStateStore.state.isPlaying
 }
@@ -26,20 +25,13 @@ const change = (): void => {
   playerStateStore.state.isPlaying = true
 }
 
-const props = defineProps({
-  playListShow: {
-    type: Boolean
-  },
-  isPlayer: {
-    type: Boolean,
-    default: false
-  }
+const props = withDefaults(defineProps<{ playListShow: boolean; isPlayer?: boolean }>(), {
+  isPlayer: false
 })
 const emit = defineEmits<{
   (e: 'update:playListShow', value: boolean): void
 }>()
 
-const image = computed(() => (props.isPlayer ? emptyAlbum : playerStateStore.state.albumImage))
 const cardStyle = props.isPlayer
   ? ['--el-card-bg-color: transparent', '--el-card-border-color: rgba(255,255,255,.1)']
   : []
@@ -51,27 +43,32 @@ const color = props.isPlayer ? '#fff' : '#000'
 
 <template>
   <el-card shadow="never" :style="cardStyle">
-    <div w-40 flex gap-3 items-center :style="{ color }">
-      <album-image :image="image" :hover="!props.isPlayer"></album-image>
+    <div flex gap-1 lg="gap-3" items-center :style="{ color }">
+      <album-image
+        :image="props.isPlayer ? emptyAlbum : playerStateStore.state.albumImage"
+        :hover="!props.isPlayer"
+        :after-icon-class="!props.isPlayer ? 'after:i-q-chevron-up-12' : 'after:i-q-fullscreen-exit-16'"
+        class="w-60px h-60px"
+        @click="playerStateStore.state.show = !playerStateStore.state.show"
+      ></album-image>
       <div v-if="playerStateStore.state.id !== 0">
         <div>{{ playerStateStore.state.title }} - {{ playerStateStore.state.album }}</div>
         <div>{{ playerStateStore.state.subtitle }}</div>
       </div>
-      <div v-else>
+      <div v-else hidden sm="flex">
         <div>xx音乐</div>
       </div>
     </div>
     <div flex-1 :style="{ color }">
-      <div flex justify-center gap-5 h-10 items-center>
+      <div flex justify-center gap-2 lg="gap-5" h-10 items-center>
         <el-popover :width="200" trigger="click" content="this is content, this is content, this is content">
           <template #reference>
-            <i i-q-speaker-1-16 text-xl mx-5 class="hover:color-green"></i>
+            <i i-q-speaker-1-16 text-xl lg="mx-5" class="hover:color-green"></i>
           </template>
         </el-popover>
         <i i-q-skip-backward-16 text-xl cursor-pointer class="hover:color-green"></i>
         <div
-          class="w-10 h-7 flex justify-center items-center rounded-3xl cursor-pointer"
-          style="background-color: #02eb82ff"
+          class="w-10 h-7 flex justify-center items-center rounded-3xl cursor-pointer bg-[#02eb82ff]"
           @click="playChange"
         >
           <i :class="playerStateStore.state.isPlaying ? 'i-q-pause-16' : 'i-q-play-small-16'" text-xl></i>
@@ -81,9 +78,7 @@ const color = props.isPlayer ? '#fff' : '#000'
         <el-popover width="80px" trigger="click" placement="top" popper-class="speaker-popper">
           <template #reference>
             <i
-              text-xl
-              mx-5
-              class="hover:color-green"
+              class="text-xl hover:color-green lg:mx-5"
               :class="setting.mute || setting.volume === 0 ? 'i-q-speaker-mute-16' : 'i-q-speaker-1-16'"
             ></i>
           </template>
@@ -91,9 +86,7 @@ const color = props.isPlayer ? '#fff' : '#000'
           <span mt select-none>{{ setting.volume }}%</span>
           <el-divider></el-divider>
           <i
-            text-xl
-            mx-5
-            class="hover:color-green"
+            class="mx-5 text-xl hover:color-green"
             :class="setting.mute || setting.volume === 0 ? 'i-q-speaker-mute-16' : 'i-q-speaker-1-16'"
             @click="setting.mute = !setting.mute"
           ></i>
@@ -115,11 +108,9 @@ const color = props.isPlayer ? '#fff' : '#000'
         <span mx-xs>{{ formatDuring(playerStateStore.state.duration) }}</span>
       </div>
     </div>
-    <div w-40 flex justify-end :style="{ color }">
+    <div flex justify-end :style="{ color }">
       <i
-        i-q-justify-right-16
-        text-xl
-        class="hover:color-green"
+        class="text-xl i-q-justify-right-16 hover:color-green"
         @click="emit('update:playListShow', !props.playListShow)"
       ></i>
     </div>
@@ -129,7 +120,7 @@ const color = props.isPlayer ? '#fff' : '#000'
 <style scoped lang="scss">
 :deep(.el-card__body) {
   --el-card-padding: 0;
-  @apply flex items-center justify-between gap-32 h-full mx-5vw;
+  @apply flex items-center justify-between gap-1 sm:gap-20 lg:gap-32 h-full mx-5vw;
 }
 :deep(.el-slider) {
   --el-slider-main-bg-color: v-bind(color);
@@ -144,8 +135,6 @@ const color = props.isPlayer ? '#fff' : '#000'
   z-index: 0;
   @apply hover:cursor-pointer;
 }
-.time-slider {
-}
 :deep(.el-slider__button) {
   --el-slider-button-size: 10px;
   &:hover,
@@ -155,15 +144,15 @@ const color = props.isPlayer ? '#fff' : '#000'
 }
 
 :deep(.speaker-popper) {
-  min-width: 1px !important;
+  @apply min-w-xs!;
 }
+
 .el-divider {
-  margin: 12px 0;
+  @apply my-12px;
 }
 </style>
-<style>
+<style lang="scss">
 .speaker-popper {
-  min-width: 50px !important;
-  @apply flex flex-col items-center;
+  @apply flex flex-col items-center min-w-50px!;
 }
 </style>

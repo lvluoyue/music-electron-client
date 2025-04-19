@@ -1,7 +1,6 @@
-import { contextBridge, ipcRenderer } from 'electron'
+import { contextBridge } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 import { useIpcRenderer } from '@vueuse/electron'
-import { queryParam } from '../main/sqlite.d'
 
 const { send } = useIpcRenderer()
 
@@ -10,8 +9,7 @@ const api = {
   windowMinimize: (): void => send('window-minimize'),
   windowMaximize: (): void => send('window-maximize'),
   windowRestore: (): void => send('window-restore'),
-  windowClose: (): void => send('window-close'),
-  sqlQuery: <R>(param: queryParam): Promise<R[]> => ipcRenderer.invoke('sql-query', param)
+  windowClose: (): void => send('window-close')
 }
 
 export type Api = typeof api

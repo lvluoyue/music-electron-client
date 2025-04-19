@@ -12,14 +12,14 @@ export interface SearchSongData {
 }
 
 export interface SongDataList {
-  id: number
-  mid: string
+  songID: number
+  songMID: string
   vid: string
-  song: string
+  title: string
   subtitle: string
   album: string
   singer: string
-  singer_list: SingerList[]
+  singerList: SingerList[]
   cover: string
   pay: Pay
   time: Date

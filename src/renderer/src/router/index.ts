@@ -3,6 +3,7 @@ import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-rou
 type DynamicImportComponent = Promise<typeof import('@renderer/layout/index.vue')>
 const Layout: () => DynamicImportComponent = () => import('@renderer/layout/index.vue')
 
+// @unocss-include
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -33,16 +34,18 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@renderer/views/download/index.vue')
       },
       {
-        path: 'search',
-        meta: { title: '本地和下载', hidden: true },
-        children: [
-          {
-            path: 'song/:keyword',
-            name: 'searchSong',
-            meta: { title: '搜索', icon: 'i-q-search-16' },
-            component: () => import('@renderer/views/search/song.vue')
-          }
-        ]
+        path: 'search/:searchType/:keyword',
+        name: 'search',
+        meta: { title: '搜索', hidden: true },
+        component: () => import('@renderer/views/search/index.vue')
+        // children: [
+        //   {
+        //     path: 'song/:keyword',
+        //     name: 'searchSong',
+        //     meta: { title: '搜索', icon: 'i-q-search-16' },
+        //     component: () => import('@renderer/views/search/components/song.vue')
+        //   }
+        // ]
       },
       {
         path: '404',

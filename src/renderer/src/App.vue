@@ -23,14 +23,6 @@ watch(
     immediate: true
   }
 )
-
-onMounted(async () => {
-  console.log(
-    await window.api.sqlQuery<string>({
-      sql: 'SELECT * FROM test'
-    })
-  )
-})
 </script>
 
 <template>

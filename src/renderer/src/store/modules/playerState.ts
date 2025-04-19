@@ -27,7 +27,7 @@ export const usePlayerStateStore = defineStore(
     const createHowl = (audioFileUrl): Howl => {
       const howl = new Howl({
         src: [audioFileUrl],
-        html5: true,
+        // html5: true,
         format: ['mp3', 'ogg', 'wav', 'm4a', 'flac', 'wma', 'aac', 'wavpack', 'dolby', 'mp4'],
         // 加载时无id
         onload: (): void => {
@@ -63,6 +63,18 @@ export const usePlayerStateStore = defineStore(
           state.currentTime = howl.seek() * 1000
         }
       })
+      // howl.pannerAttr({
+      //   coneInnerAngle: 360,
+      //   // coneOuterAngle?: number | undefined;
+      //   // coneOuterGain?: number | undefined;
+      //   // distanceModel?: "inverse" | "linear";
+      //   // maxDistance?: number;
+      //   panningModel: 'HRTF'
+      //   // refDistance?: number;
+      //   // rolloffFactor?: number;
+      // })
+      // howl.stereo(-1)
+      // howl.pos(0.5, 0.5, 0.5)
       return howl
     }
 

@@ -8,7 +8,7 @@ const { state } = usePlayerStateStore()
 
 <template>
   <transition name="slide-up">
-    <div v-show="state.show" absolute top-0 left-0 w-full h-full>
+    <div v-show="state.show" absolute top-0 left-0 w-full h-full z-10>
       <transition name="icon-header">
         <div v-show="!appStore.isPageLeave" pos-fixed flex h-80px z20 bg-none items-center px-20px cursor-pointer>
           <i
@@ -20,7 +20,6 @@ const { state } = usePlayerStateStore()
       <player-main></player-main>
       <transition name="player-button">
         <div v-show="!appStore.isPageLeave" pos-fixed bottom-0 h-80px w-full z20>
-          <!--          <album-image :image="image"></album-image>-->
           <page-footer :is-player="true" pos-fixed bottom-0 h-80px w-full z20></page-footer>
         </div>
       </transition>

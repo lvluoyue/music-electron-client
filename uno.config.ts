@@ -25,13 +25,15 @@ export default defineConfig({
     ['plus-lighter', { 'mix-blend-mode': 'plus-lighter' }]
   ],
   presets: [
-    presetWind3(),
+    presetWind3({
+      reset: true
+    }),
     presetAttributify(),
     presetIcons({
       cdn: 'https://esm.sh/',
       collections: {
         q: () => import('@iconify-json/qlementine-icons/icons.json').then((i) => i.default),
-        l: FileSystemIconLoader('./resources/icons', (svg) =>
+        l: FileSystemIconLoader('resources/icons', (svg) =>
           svg.replace(/(<svg.*?width=)"(.*?)"/, '$1"1em"').replace(/(<svg.*?height=)"(.*?)"/, '$1"1em"')
         )
       }

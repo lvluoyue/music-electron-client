@@ -10,19 +10,25 @@
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
-  margin: 0;
-  font-weight: normal;
+  @apply box-border m0 font-400;
 }
+
 html,body {
   @apply overflow-hidden rd-2xl drag;
   font-family: Inter, 'Helvetica Neue', Helvetica, 'PingFang SC',
   'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
 }
 
+::-webkit-scrollbar {
+  @apply w5px! appearance-none;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply h-5px b-transparent b-solid b-1 rd-lg bg-black bg-op-10;
+}
+
 #app {
-  @apply rounded-xl select-none;
-  background: #f2f5f8;
+  @apply rounded-xl select-none bg-[#f2f5f8];
 }
 
 /* 定义上拉动画 */

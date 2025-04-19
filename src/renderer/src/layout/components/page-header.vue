@@ -69,8 +69,8 @@ const searchEnterHandller = (e): void => {
     return
   }
   router.push({
-    name: 'searchSong',
-    params: { keyword: searchOptions.value.keyword }
+    name: 'search',
+    params: { searchType: 'song', keyword: searchOptions.value.keyword }
   })
 }
 </script>
@@ -119,6 +119,6 @@ const searchEnterHandller = (e): void => {
 
 <style scoped lang="scss">
 :deep(.el-card__body) {
-  width: 100%;
+  @apply w-full;
 }
 </style>

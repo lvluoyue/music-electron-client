@@ -23,7 +23,7 @@ console.log()
 
 <style scoped lang="scss">
 :deep(.el-scrollbar__wrap--hidden-default) {
-  height: 100%;
+  @apply h-full;
 }
 .el-scrollbar {
   border-right: 1px solid var(--el-menu-border-color);

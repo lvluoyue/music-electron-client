@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { EplorRenderer, LyricLineMouseEvent } from '@applemusic-like-lyrics/core'
-import { parseYrc } from '@applemusic-like-lyrics/lyric'
+import { parseLrc } from '@applemusic-like-lyrics/lyric'
 import { BackgroundRender, BackgroundRenderRef, LyricPlayer, LyricPlayerRef } from '@applemusic-like-lyrics/vue'
 import { usePlayerStateStore } from '@renderer/store/modules/playerState'
 import defaultPlayer from '@renderer/assets/default-player.png'
@@ -59,7 +59,7 @@ const onClickOpenTTMLLyric = (): void => {
     const file = input.files?.[0]
     if (file) {
       const text = await file.text()
-      const result = parseYrc(text)
+      const result = parseLrc(text)
       console.log('parseTTML', result)
       playerStateStore.state.lyricLines = result
     }
@@ -141,7 +141,7 @@ watch(
 }
 
 :deep([class^='lyricMainLine-']) {
-  padding: 0.75rem !important;
+  @apply p-xs!;
 }
 
 :deep(.lyricLine-0-1-2:has(> *)):hover {
