@@ -11,9 +11,9 @@ import presetWind3 from '@unocss/preset-wind3'
 import { FileSystemIconLoader } from '@iconify/utils/lib/loader/node-loaders'
 
 export default defineConfig({
-  shortcuts: [
-    // ...
-  ],
+  shortcuts: {
+    'wh-full': 'w-full h-full'
+  },
   theme: {
     colors: {
       // ...
@@ -21,7 +21,7 @@ export default defineConfig({
   },
   rules: [
     ['drag', { '-webkit-app-region': 'drag', '-webkit-user-select': 'none' }],
-    ['no-drag', { '-webkit-app-region': 'no-drag' }],
+    ['no-drag', { '-webkit-app-region': 'no-drag', '-webkit-user-drag': 'none' }],
     ['plus-lighter', { 'mix-blend-mode': 'plus-lighter' }]
   ],
   presets: [

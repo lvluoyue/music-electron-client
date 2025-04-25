@@ -1,6 +1,4 @@
-<script setup lang="ts">
-const playListShow = ref(false)
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <el-container h-screen p2 rounded-9 overflow-hidden>
@@ -14,24 +12,9 @@ const playListShow = ref(false)
       </el-container>
     </el-main>
     <el-footer no-drag>
-      <page-footer
-        h-full
-        :play-list-show="playListShow"
-        @update:play-list-show="(value) => (playListShow = value)"
-      ></page-footer>
+      <page-footer h-full></page-footer>
     </el-footer>
   </el-container>
-
-  <el-drawer v-model="playListShow" :show-close="false">
-    <template #header="{ close, titleId, titleClass }">
-      <h4 :id="titleId" :class="titleClass">This is a custom header!</h4>
-      <el-button type="danger" @click="close">
-        <el-icon class="el-icon--left"></el-icon>
-        Close
-      </el-button>
-    </template>
-    This is drawer content.
-  </el-drawer>
 </template>
 
 <style scoped lang="scss">

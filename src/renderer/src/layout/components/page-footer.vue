@@ -4,7 +4,7 @@ import { usePlayerStateStore } from '@renderer/store/modules/playerState'
 import emptyAlbum from '@renderer/assets/empty-album.svg'
 import { formatDuring } from '@renderer/utils'
 
-const { setting } = usePlayerInfoStore()
+const playerInfoStore = usePlayerInfoStore()
 const playerStateStore = usePlayerStateStore()
 
 const changeVolume = (value): void => {
@@ -25,13 +25,9 @@ const change = (): void => {
   playerStateStore.state.isPlaying = true
 }
 
-const props = withDefaults(defineProps<{ playListShow: boolean; isPlayer?: boolean }>(), {
+const props = withDefaults(defineProps<{ isPlayer?: boolean }>(), {
   isPlayer: false
 })
-const emit = defineEmits<{
-  (e: 'update:playListShow', value: boolean): void
-}>()
-
 const cardStyle = props.isPlayer
   ? ['--el-card-bg-color: transparent', '--el-card-border-color: rgba(255,255,255,.1)']
   : []
@@ -45,15 +41,16 @@ const color = props.isPlayer ? '#fff' : '#000'
   <el-card shadow="never" :style="cardStyle">
     <div flex gap-1 lg="gap-3" items-center :style="{ color }">
       <album-image
-        :image="props.isPlayer ? emptyAlbum : playerStateStore.state.albumImage"
+        :image="props.isPlayer ? emptyAlbum : playerStateStore.state.songInfo.cover"
         :hover="!props.isPlayer"
         :after-icon-class="!props.isPlayer ? 'after:i-q-chevron-up-12' : 'after:i-q-fullscreen-exit-16'"
         class="w-60px h-60px"
         @click="playerStateStore.state.show = !playerStateStore.state.show"
       ></album-image>
-      <div v-if="playerStateStore.state.id !== 0">
-        <div>{{ playerStateStore.state.title }} - {{ playerStateStore.state.album }}</div>
-        <div>{{ playerStateStore.state.subtitle }}</div>
+      <div v-if="playerStateStore.state.songInfo.songID !== 0" w40 overflow-hidden relative>
+        <div w-auto inline-block whitespace-nowrap style="animation: move 1.5s infinite alternate linear">
+          {{ playerStateStore.state.songInfo.title }} - {{ playerStateStore.state.songInfo.album }}
+        </div>
       </div>
       <div v-else hidden sm="flex">
         <div>xx音乐</div>
@@ -79,16 +76,31 @@ const color = props.isPlayer ? '#fff' : '#000'
           <template #reference>
             <i
               class="text-xl hover:color-green lg:mx-5"
-              :class="setting.mute || setting.volume === 0 ? 'i-q-speaker-mute-16' : 'i-q-speaker-1-16'"
+              :class="
+                playerInfoStore.setting.mute || playerInfoStore.setting.volume === 0
+                  ? 'i-q-speaker-mute-16'
+                  : 'i-q-speaker-1-16'
+              "
             ></i>
           </template>
-          <el-slider v-model="setting.volume" :min="0" :max="100" vertical height="150px" @input="changeVolume" />
-          <span mt select-none>{{ setting.volume }}%</span>
+          <el-slider
+            v-model="playerInfoStore.setting.volume"
+            :min="0"
+            :max="100"
+            vertical
+            height="150px"
+            @input="changeVolume"
+          />
+          <span mt select-none>{{ playerInfoStore.setting.volume }}%</span>
           <el-divider></el-divider>
           <i
             class="mx-5 text-xl hover:color-green"
-            :class="setting.mute || setting.volume === 0 ? 'i-q-speaker-mute-16' : 'i-q-speaker-1-16'"
-            @click="setting.mute = !setting.mute"
+            :class="
+              playerInfoStore.setting.mute || playerInfoStore.setting.volume === 0
+                ? 'i-q-speaker-mute-16'
+                : 'i-q-speaker-1-16'
+            "
+            @click="playerInfoStore.setting.mute = !playerInfoStore.setting.mute"
           ></i>
         </el-popover>
       </div>
@@ -108,11 +120,17 @@ const color = props.isPlayer ? '#fff' : '#000'
         <span mx-xs>{{ formatDuring(playerStateStore.state.duration) }}</span>
       </div>
     </div>
-    <div flex justify-end :style="{ color }">
-      <i
-        class="text-xl i-q-justify-right-16 hover:color-green"
-        @click="emit('update:playListShow', !props.playListShow)"
-      ></i>
+    <div w10vw>
+      <el-popover title="播放队列" width="500" :offset="30" :hide-after="0" placement="top">
+        <template #reference>
+          <div flex justify-end :style="{ color }">
+            <i class="text-xl i-q-justify-right-16 hover:color-green"></i>
+          </div>
+        </template>
+        <el-scrollbar class="h-70vh!">
+          <song-list :data="playerInfoStore.playList"></song-list>
+        </el-scrollbar>
+      </el-popover>
     </div>
   </el-card>
 </template>
@@ -154,5 +172,13 @@ const color = props.isPlayer ? '#fff' : '#000'
 <style lang="scss">
 .speaker-popper {
   @apply flex flex-col items-center min-w-50px!;
+}
+@keyframes move {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-100% + 10rem));
+  }
 }
 </style>

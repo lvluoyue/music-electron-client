@@ -21,17 +21,12 @@ export interface SongDataList {
   singer: string
   singerList: SingerList[]
   cover: string
-  pay: Pay
+  pay: '免费' | '付费'
   time: Date
   type: number
   bpm: number
   content: string
   grp: SongDataList[]
-}
-
-export enum Pay {
-  '免费' = '免费',
-  '付费' = '付费'
 }
 
 export interface SingerList {

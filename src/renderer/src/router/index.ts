@@ -43,7 +43,7 @@ const routes: RouteRecordRaw[] = [
         //     path: 'song/:keyword',
         //     name: 'searchSong',
         //     meta: { title: '搜索', icon: 'i-q-search-16' },
-        //     component: () => import('@renderer/views/search/components/song.vue')
+        //     component: () => import('@renderer/views/search/components/song-list.vue')
         //   }
         // ]
       },

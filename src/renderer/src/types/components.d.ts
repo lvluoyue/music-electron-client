@@ -45,7 +45,8 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SidebarItem: typeof import('./../layout/components/SidebarItem.vue')['default']
-    Song: typeof import('./../views/search/components/song.vue')['default']
+    Song: typeof import('../views/search/components/song-list.vue')['default']
+    SongList: typeof import('./../views/search/components/song-list.vue')['default']
     SongListItem: typeof import('./../views/search/components/songListItem.vue')['default']
     SongNameItem: typeof import('./../views/search/components/songNameItem.vue')['default']
   }

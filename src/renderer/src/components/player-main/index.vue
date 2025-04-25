@@ -34,23 +34,6 @@ const onClickOpenAudio = (): void => {
   input.click()
 }
 
-const onClickOpenAlbumImage = (): void => {
-  const input = document.createElement('input')
-  input.type = 'file'
-  input.accept = 'image/*,video/*'
-  input.onchange = (): void => {
-    const file = input.files?.[0]
-    if (file) {
-      if (playerStateStore.state.albumImage.trim().length > 0) {
-        URL.revokeObjectURL(playerStateStore.state.albumImage)
-      }
-      playerStateStore.state.albumImage = URL.createObjectURL(file)
-      playerStateStore.state.albumIsVideo = file.type.startsWith('video/')
-    }
-  }
-  input.click()
-}
-
 const onClickOpenTTMLLyric = (): void => {
   const input = document.createElement('input')
   input.type = 'file'
@@ -90,10 +73,10 @@ watch(
     ref="bgRef"
     :fps="60"
     :render-scale="0.5"
-    :album="playerStateStore.state.albumImage || defaultPlayer"
+    :album="playerStateStore.state.songInfo.cover || defaultPlayer"
     :album-is-video="playerStateStore.state.albumIsVideo"
-    :flow-speed="playerStateStore.state.bpm / 2"
-    :low-freq-volume="1"
+    :flow-speed="playerStateStore.state.songInfo.bpm / 2"
+    :low-freq-volume="playerStateStore.state.lowFreqVolume"
     :has-lyric="true"
     :renderer="EplorRenderer"
     class="player-background"
@@ -101,13 +84,12 @@ watch(
   <div pos-relative flex h-full w70vw ma z10 items-center justify-center gap-30>
     <div class="w-50vh" flex flex-wrap items-center flex-col text-align-center color-white>
       <el-image
-        class="w-80% h-80% rounded-2xl"
+        class="w-80% h-80% rounded-2xl no-drag"
         fit="cover"
-        :src="playerStateStore.state.albumImage || defaultPlayer"
+        :src="playerStateStore.state.songInfo.cover || defaultPlayer"
       ></el-image>
-      <div v-if="playerStateStore.state.id !== 0">
-        <span>{{ playerStateStore.state.title }} - {{ playerStateStore.state.album }}</span>
-        <span>{{ playerStateStore.state.subtitle }}</span>
+      <div v-if="playerStateStore.state.songInfo.songID !== 0">
+        <span>{{ playerStateStore.state.songInfo.title }} - {{ playerStateStore.state.songInfo.album }}</span>
       </div>
     </div>
     <LyricPlayer
@@ -130,14 +112,13 @@ watch(
   </div>
   <div pos-absolute right-0 bottom-80px bg-black bg-op-40 m-xy p-xy rounded-lg color-white flex gap-2 flex-col z20>
     <button type="button" @click="onClickOpenAudio">加载音乐</button>
-    <button type="button" @click="onClickOpenAlbumImage">加载背景资源</button>
     <button type="button" @click="onClickOpenTTMLLyric">加载歌词</button>
   </div>
 </template>
 
 <style scoped lang="scss">
 .player-background {
-  @apply pos-fixed w-full h-full overflow-hidden rounded-xl z-5;
+  @apply pos-fixed w-full h-full overflow-hidden rounded-lg z-5;
 }
 
 :deep([class^='lyricMainLine-']) {

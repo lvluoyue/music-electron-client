@@ -6,23 +6,28 @@ export const usePlayerStateStore = defineStore(
   'playerState',
   () => {
     const playerInfoStore = usePlayerInfoStore()
-    const state = reactive<playerState>({
-      id: 0,
-      mid: '',
-      title: '',
-      subtitle: '',
+    const state = ref<playerState>({
+      songInfo: playerInfoStore.setting.songInfo,
       show: false,
       isPlaying: false,
       currentTime: 0,
       volume: 1,
-      bpm: 60,
+      lowFreqVolume: 1,
       duration: 0,
       albumIsVideo: false,
-      album: '',
-      albumImage: playerInfoStore.setting.albumImage,
       lyricLines: [] as LyricLine[],
       playUrl: ''
     })
+
+    setInterval(() => {
+      state.value.lowFreqVolume = state.value.lowFreqVolume == 0.1 ? 0.9 : 0.1
+      console.log('lowFreqBolume', state.value.lowFreqVolume)
+    }, 1000)
+
+    watch(
+      () => playerInfoStore.setting.songInfo,
+      (data) => (state.value.songInfo = data)
+    )
 
     const createHowl = (audioFileUrl): Howl => {
       const howl = new Howl({
@@ -31,36 +36,36 @@ export const usePlayerStateStore = defineStore(
         format: ['mp3', 'ogg', 'wav', 'm4a', 'flac', 'wma', 'aac', 'wavpack', 'dolby', 'mp4'],
         // 加载时无id
         onload: (): void => {
-          state.duration = howl.duration() * 1000
-          state.currentTime = 0
-          state.isPlaying = false
+          state.value.duration = howl.duration() * 1000
+          state.value.currentTime = 0
+          state.value.isPlaying = false
         },
         onplay: (id): void => {
           howl.fade(0, 1, 1000)
           // 淡入效果：从 0 淡入到 1 在 1 秒内完成
           const interval = setInterval(() => {
             if (howl.playing(id)) {
-              state.currentTime = howl.seek() * 1000
+              state.value.currentTime = howl.seek() * 1000
             } else {
               clearInterval(interval)
             }
           }, 100)
         },
         onend: (): void => {
-          state.currentTime = 0
-          state.isPlaying = false
+          state.value.currentTime = 0
+          state.value.isPlaying = false
         },
         onvolume: (): void => {
-          state.volume = howl.volume() as number
+          state.value.volume = howl.volume() as number
         },
         onfade: (): void => {
           // 淡出效果完成后暂停
-          if (!state.isPlaying && state.volume == 0) {
+          if (!state.value.isPlaying && state.value.volume == 0) {
             howl.pause()
           }
         },
         onseek: (): void => {
-          state.currentTime = howl.seek() * 1000
+          state.value.currentTime = howl.seek() * 1000
         }
       })
       // howl.pannerAttr({
@@ -81,7 +86,7 @@ export const usePlayerStateStore = defineStore(
     const howl = computed(() => {
       console.log('howl重新加载了')
       Howler.unload()
-      return createHowl(state.playUrl)
+      return createHowl(state.value.playUrl)
     })
     return {
       state,

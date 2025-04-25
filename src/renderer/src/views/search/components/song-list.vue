@@ -1,20 +1,25 @@
 <script setup lang="ts">
-import { type SearchParams, song, type SongDataList } from '@renderer/api/core/search'
+import { type SongDataList } from '@renderer/api/core/search'
 import { formatDuring } from '@renderer/utils'
+import { usePlayerInfoStore } from '@renderer/store/modules/playerInfo'
+import { usePlayerStateStore } from '@renderer/store/modules/playerState'
 
-const route = useRoute()
+const playerInfoStore = usePlayerInfoStore()
+const playerStateStore = usePlayerStateStore()
 
-const data = reactive<{
-  params: SearchParams
-  list: SongDataList[]
-}>({
-  params: {
-    keyword: route.params.keyword as string,
-    page: 1,
-    limit: 10
-  },
-  list: []
-})
+const props = withDefaults(
+  defineProps<{
+    data: SongDataList[]
+    scroll?: () => Promise<void> | void
+    showAlbum?: boolean
+    showInterval?: boolean
+  }>(),
+  {
+    scroll: () => {},
+    showInterval: false,
+    showAlbum: false
+  }
+)
 
 const scrollData = reactive({
   loading: false,
@@ -22,37 +27,27 @@ const scrollData = reactive({
 })
 
 const load = async (): Promise<void> => {
-  if (!scrollData.loading) {
+  if (!scrollData.loading && props.scroll) {
     scrollData.loading = true
-    const { meta, list } = await song(data.params)
-    data.params.page = meta.nextPage
-    data.list = data.list.concat(list)
+    await props.scroll()
     scrollData.loading = false
   }
 }
 
-watch(
-  () => route.params.keyword,
-  () => {
-    data.params = {
-      keyword: route.params.keyword as string,
-      page: 1,
-      limit: 10
-    }
-    data.list = []
-    load()
-  },
-  {
-    deep: true
+const imageClickHandller = (data): void => {
+  if (playerInfoStore.playList?.filter((item) => item.songID === data.songID)?.length === 0) {
+    playerInfoStore.playList?.push(data)
   }
-)
+  playerInfoStore.setting.songInfo = data
+  // playerStateStore.state = { ...playerStateStore.state, ...data }
+}
 </script>
 
 <template>
   <el-table
     v-infinite-scroll="load"
     :infinite-scroll-delay="500"
-    :data="data.list"
+    :data="props.data"
     :row-style="{ height: '60px' }"
     @cell-mouse-enter="(row: SongDataList) => (scrollData.hoverID = row.songID)"
     @cell-mouse-leave="scrollData.hoverID = -1"
@@ -60,7 +55,12 @@ watch(
     <el-table-column prop="song" label="歌名/歌手">
       <template #default="{ row }">
         <div class="song-item" flex items-center gap-2>
-          <album-image class="w-40px h-40px" :image="row.cover" :hover="true"></album-image>
+          <album-image
+            class="w-40px h-40px"
+            :image="row.cover"
+            :hover="true"
+            @click="imageClickHandller(row)"
+          ></album-image>
           <div truncate whitespace-normal>
             <div line-clamp-1>{{ row.title }}</div>
             <div line-clamp-1>{{ row.singer }}</div>
@@ -76,8 +76,8 @@ watch(
         </div>
       </template>
     </el-table-column>
-    <el-table-column prop="album" label="专辑" width="250" />
-    <el-table-column prop="interval" label="时长" width="150">
+    <el-table-column v-if="props.showAlbum" prop="album" label="专辑" width="250" />
+    <el-table-column v-if="props.showInterval" prop="interval" label="时长" width="150">
       <template #default="{ row }">
         <span text-black text-op-30 font-100>{{ formatDuring(row.interval * 1000) }}</span>
       </template>
