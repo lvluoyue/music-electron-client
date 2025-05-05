@@ -1,6 +1,7 @@
 import { LyricLine } from '@applemusic-like-lyrics/core'
 import { usePlayerInfoStore } from '@renderer/store/modules/playerInfo'
 import { Howl, Howler } from 'howler'
+import HiFiBassAnalyzer from '@renderer/utils/HiFiBassAnalyzer'
 
 export const usePlayerStateStore = defineStore(
   'playerState',
@@ -19,10 +20,10 @@ export const usePlayerStateStore = defineStore(
       playUrl: ''
     })
 
-    setInterval(() => {
-      state.value.lowFreqVolume = state.value.lowFreqVolume == 0.1 ? 0.9 : 0.1
-      console.log('lowFreqBolume', state.value.lowFreqVolume)
-    }, 1000)
+    // 低频音量监控，可根据鼓点动态变化背景图片
+    // setInterval(() => {
+    //   state.value.lowFreqVolume = state.value.lowFreqVolume == 0.1 ? 0.9 : 0.1
+    // }, 1000)
 
     watch(
       () => playerInfoStore.setting.songInfo,
@@ -49,6 +50,15 @@ export const usePlayerStateStore = defineStore(
             } else {
               clearInterval(interval)
             }
+          }, 100)
+          const a = new HiFiBassAnalyzer()
+          const interval1 = setInterval(() => {
+            if (howl.playing()) {
+              state.value.lowFreqVolume = a.getTransientBass() * 1.9
+            } else {
+              clearInterval(interval1)
+            }
+            console.log(state.value.lowFreqVolume)
           }, 100)
         },
         onend: (): void => {
@@ -78,11 +88,11 @@ export const usePlayerStateStore = defineStore(
       //   // refDistance?: number;
       //   // rolloffFactor?: number;
       // })
-      // howl.stereo(-1)
-      // howl.pos(0.5, 0.5, 0.5)
+      // howl.stereo(0) // 默认居中立体声
+      // howl.pos(0.1, -0.1, -0.5)
+      // howl.orientation(0, 0, 1) // 默认前向方向
       return howl
     }
-
     const howl = computed(() => {
       console.log('howl重新加载了')
       Howler.unload()

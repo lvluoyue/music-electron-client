@@ -4,6 +4,8 @@ import { usePlayerStateStore } from '@renderer/store/modules/playerState'
 import emptyAlbum from '@renderer/assets/empty-album.svg'
 import { formatDuring } from '@renderer/utils'
 
+const router = useRouter()
+
 const playerInfoStore = usePlayerInfoStore()
 const playerStateStore = usePlayerStateStore()
 
@@ -63,6 +65,9 @@ const color = props.isPlayer ? '#fff' : '#000'
             <i i-q-speaker-1-16 text-xl lg="mx-5" class="hover:color-green"></i>
           </template>
         </el-popover>
+        <router-link to="/sound3d">
+          <i i-q-sound-16 text-xl cursor-pointer class="hover:color-green" :style="{ color }" title="3D音效设置"></i>
+        </router-link>
         <i i-q-skip-backward-16 text-xl cursor-pointer class="hover:color-green"></i>
         <div
           class="w-10 h-7 flex justify-center items-center rounded-3xl cursor-pointer bg-[#02eb82ff]"
@@ -121,16 +126,17 @@ const color = props.isPlayer ? '#fff' : '#000'
       </div>
     </div>
     <div w10vw>
-      <el-popover title="播放队列" width="500" :offset="30" :hide-after="0" placement="top">
-        <template #reference>
-          <div flex justify-end :style="{ color }">
+      <div flex justify-end gap-3 :style="{ color }">
+        <i i-q-aiff-16 text-xl class="hover:color-green" title="3D音效设置" @click="router.push('/sound3d')"></i>
+        <el-popover title="播放队列" width="500" :offset="30" :hide-after="0" placement="top">
+          <template #reference>
             <i class="text-xl i-q-justify-right-16 hover:color-green"></i>
-          </div>
-        </template>
-        <el-scrollbar class="h-70vh!">
-          <song-list :data="playerInfoStore.playList"></song-list>
-        </el-scrollbar>
-      </el-popover>
+          </template>
+          <el-scrollbar class="h-70vh!">
+            <song-list :data="playerInfoStore.playList"></song-list>
+          </el-scrollbar>
+        </el-popover>
+      </div>
     </div>
   </el-card>
 </template>

@@ -34,6 +34,12 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@renderer/views/download/index.vue')
       },
       {
+        path: 'sound3d',
+        name: 'sound3d',
+        meta: { title: '3D音效设置', icon: 'i-q-sound-16' },
+        component: () => import('@renderer/views/sound3d/index.vue')
+      },
+      {
         path: 'search/:searchType/:keyword',
         name: 'search',
         meta: { title: '搜索', hidden: true },

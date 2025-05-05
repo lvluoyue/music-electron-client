@@ -312,6 +312,8 @@
     "usePreferredReducedTransparency": true,
     "useSSRWidth": true,
     "watchDeep": true,
-    "watchImmediate": true
+    "watchImmediate": true,
+    "Slot": true,
+    "Slots": true
   }
 }
