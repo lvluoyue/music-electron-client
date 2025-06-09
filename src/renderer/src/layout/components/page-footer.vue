@@ -49,7 +49,7 @@ const color = props.isPlayer ? '#fff' : '#000'
         class="w-60px h-60px"
         @click="playerStateStore.state.show = !playerStateStore.state.show"
       ></album-image>
-      <div v-if="playerStateStore.state.songInfo.songID !== 0" w40 overflow-hidden relative>
+      <div v-if="playerStateStore.state.songInfo.songID !== 0" w40 overflow-hidden hidden class="sm:block">
         <div w-auto inline-block whitespace-nowrap style="animation: move 1.5s infinite alternate linear">
           {{ playerStateStore.state.songInfo.title }} - {{ playerStateStore.state.songInfo.album }}
         </div>
